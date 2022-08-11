@@ -1,7 +1,10 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
+
 import numpy as np
+
 from . import utility_functions as utils
 
 

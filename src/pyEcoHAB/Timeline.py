@@ -6,21 +6,23 @@ Timeline.py
 Created by Szymon Łęski on 2013-02-19.
 
 """
-import os
-from configparser import ConfigParser, NoSectionError
+import calendar
 import glob
+import os
 import sys
 import time
-import calendar
-import numpy as np
+from configparser import ConfigParser, NoSectionError
+
 import matplotlib as mpl
+import numpy as np
 
 if os.environ.get("DISPLAY", "") == "":
     print("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
-import matplotlib.ticker
 import matplotlib.dates as mpd
 import matplotlib.pyplot as plt
+import matplotlib.ticker
+
 from pyEcoHAB import utility_functions as uf
 from pyEcoHAB.utils import for_loading as fl
 from pyEcoHAB.utils import temporal as temp

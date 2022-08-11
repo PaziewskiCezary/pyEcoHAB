@@ -5,17 +5,19 @@ Created on Fri Mar 24 13:38:58 2017
 
 @author: Jan Maka, Joanna Jędrzejewska-Szmek
 """
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
-import numpy as np
+
 import matplotlib as mpl
+import numpy as np
 
 if os.environ.get("DISPLAY", "") == "":
     print("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
 import matplotlib.pyplot as plt
-from . import utility_functions as utils
 
+from . import utility_functions as utils
 
 nbins = 10
 

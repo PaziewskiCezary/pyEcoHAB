@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-import numpy as np
 import os
 from collections import OrderedDict
+
+import numpy as np
+
 from . import utility_functions as utils
-from .write_to_file import save_data_cvs, save_visit_duration
 from .plotting_functions import make_visit_duration_histogram
+from .write_to_file import save_data_cvs, save_visit_duration
 
 
 def get_visits(intervals, t_start, t_stop):

@@ -1,13 +1,15 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
-import numpy as np
 from collections import OrderedDict
 
+import numpy as np
+
 from . import utility_functions as utils
-from .write_to_file import write_registrations_stats
 from .plotting_functions import single_timeline_heat_map
+from .write_to_file import write_registrations_stats
 
 
 def get_single_antenna_stats(

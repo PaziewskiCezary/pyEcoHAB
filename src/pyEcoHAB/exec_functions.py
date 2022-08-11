@@ -1,11 +1,14 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
+
 import numpy as np
-from .write_to_file import save_single_histograms, write_csv_rasters
-from .plotting_functions import single_in_cohort_soc_plot, make_RasterPlot
-from .plotting_functions import single_heat_map
+
 from . import utility_functions as utils
+from .plotting_functions import (make_RasterPlot, single_heat_map,
+                                 single_in_cohort_soc_plot)
+from .write_to_file import save_single_histograms, write_csv_rasters
 
 
 def evaluate_whole_experiment(

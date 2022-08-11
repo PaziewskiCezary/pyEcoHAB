@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 import sys
-from datetime import date
 from collections import OrderedDict
+from datetime import date
 
 try:
     basestring
@@ -14,8 +15,9 @@ except NameError:
 
 import numpy as np
 
+from pyEcoHAB.SetupConfig import ExperimentSetupConfig, SetupConfig
+
 from . import BaseFunctions
-from pyEcoHAB.SetupConfig import SetupConfig, ExperimentSetupConfig
 from . import utility_functions as utils
 from .utils import for_loading as ufl
 

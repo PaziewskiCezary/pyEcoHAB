@@ -1,17 +1,17 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 from collections import OrderedDict
+
 import numpy as np
+
 from . import utility_functions as utils
-from .plotting_functions import single_in_cohort_soc_plot
-from .plotting_functions import make_RasterPlot
-from .write_to_file import write_binned_data
-from .write_to_file import write_csv_rasters
-from .write_to_file import write_sum_data
-from .write_to_file import write_two_values
-from .write_to_file import write_csv_alone
+from .plotting_functions import make_RasterPlot, single_in_cohort_soc_plot
+from .write_to_file import (write_binned_data, write_csv_alone,
+                            write_csv_rasters, write_sum_data,
+                            write_two_values)
 
 
 def prepare_mice_intervals(data_mice, address):

@@ -1,24 +1,23 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import
-import random
+from __future__ import absolute_import, division
+
 import os
-import numpy as np
+import random
 from collections import OrderedDict
+
+import numpy as np
 
 from . import get_activity
 from . import utility_functions as utils
-from .write_to_file import write_csv_rasters
-from .write_to_file import write_interpair_intervals
-from .write_to_file import write_bootstrap_results
-from .write_to_file import write_sum_data
-from .write_to_file import write_binned_data
-from .plotting_functions import single_in_cohort_soc_plot
-from .plotting_functions import make_RasterPlot
-from .plotting_functions import pooled_hists
-from .plotting_functions import make_histograms_for_every_mouse
-from .plotting_functions import pooled_hists_for_every_mouse
-from .plotting_functions import single_histogram_figures
+from .plotting_functions import (make_histograms_for_every_mouse,
+                                 make_RasterPlot, pooled_hists,
+                                 pooled_hists_for_every_mouse,
+                                 single_histogram_figures,
+                                 single_in_cohort_soc_plot)
+from .write_to_file import (write_binned_data, write_bootstrap_results,
+                            write_csv_rasters, write_interpair_intervals,
+                            write_sum_data)
 
 
 def insert_interval(candidate_t_start, interval, t_starts, t_ends, duration):

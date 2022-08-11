@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import numpy as np
-from . import utility_functions as utils
-from . import exec_functions as dispatch
+
 from . import dominance_in_2_cages as dom2
+from . import exec_functions as dispatch
+from . import utility_functions as utils
 
 
 def mice_in_different_spots(states1, states2):

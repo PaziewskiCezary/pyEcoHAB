@@ -1,11 +1,14 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 from collections import OrderedDict
+
 import numpy as np
+
 from pyEcoHAB import utility_functions as utils
-from pyEcoHAB.plotting_functions import single_histogram_figures
-from pyEcoHAB.plotting_functions import histograms_antenna_transitions
+from pyEcoHAB.plotting_functions import (histograms_antenna_transitions,
+                                         single_histogram_figures)
 from pyEcoHAB.utils.for_loading import save_mismatches
 from pyEcoHAB.write_to_file import save_antenna_transitions
 

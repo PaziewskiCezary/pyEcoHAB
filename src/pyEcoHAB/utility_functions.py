@@ -1,12 +1,13 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import
-import os
-import time
-import sys
-from collections import OrderedDict
-import numpy as np
+from __future__ import absolute_import, division
 
+import os
+import sys
+import time
+from collections import OrderedDict
+
+import numpy as np
 
 # NamedDict class was originally written by Zbyszek Jędrzejewski-Szmek
 # and Avrama Blackwell for moose_nerp https://github.com/neurord/moose_nerp

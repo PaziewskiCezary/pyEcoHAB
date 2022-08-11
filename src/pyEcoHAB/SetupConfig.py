@@ -1,18 +1,18 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function
+from __future__ import absolute_import, division, print_function
 
-import os
 import glob
+import os
 import sys
 
 from pyEcoHAB import data_path
 
 if sys.version_info < (3, 0):
-    from ConfigParser import RawConfigParser, DuplicateSectionError
+    from ConfigParser import DuplicateSectionError, RawConfigParser
 else:
-    from configparser import RawConfigParser, DuplicateSectionError
+    from configparser import DuplicateSectionError, RawConfigParser
 
 
 class SetupConfigMethods(RawConfigParser):

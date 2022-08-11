@@ -1,11 +1,14 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import division, print_function, absolute_import
-import os
-import time
+from __future__ import absolute_import, division, print_function
+
 import calendar
+import os
 import sys
-from collections import OrderedDict, Counter
+import time
+from collections import Counter, OrderedDict
+
 import numpy as np
+
 from pyEcoHAB.utility_functions import check_directory
 
 h = "antenna, incorrect transitions count, percentage of antenna recordings\n"
