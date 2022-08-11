@@ -10,9 +10,16 @@ from .write_to_file import write_registrations_stats
 from .plotting_functions import single_timeline_heat_map
 
 
-def get_single_antenna_stats(ecohab_data, timeline, binsize, antennas="ALL",
-                             res_dir="", prefix="", remove_mouse="",
-                             delimiter=";"):
+def get_single_antenna_stats(
+    ecohab_data,
+    timeline,
+    binsize,
+    antennas="ALL",
+    res_dir="",
+    prefix="",
+    remove_mouse="",
+    delimiter=";",
+):
     """
     Count number and combined durations of registrations of each mouse tag
     by specified antennas in bins of size binsize for tags
@@ -51,7 +58,7 @@ def get_single_antenna_stats(ecohab_data, timeline, binsize, antennas="ALL",
     mice = utils.get_mice(ecohab_data.mice, remove_mouse)
     add_info_mice = utils.add_info_mice_filename(remove_mouse)
     out_dir = os.path.join("other_variables", "registration_stats")
-    bin_ = binsize/3600
+    bin_ = binsize / 3600
     fname_durations = "registration_duration_%4.2fh" % bin_
     fname_count = "registration_count_%4.2fh" % bin_
     shortest_phase = utils.get_shortest_phase_duration(timeline)
@@ -65,7 +72,7 @@ def get_single_antenna_stats(ecohab_data, timeline, binsize, antennas="ALL",
         i = 0
         while t_start < t_end:
             phases.append("%dxbin_%5.2fh" % (i, bin_))
-            times.append((t_start, t_start+binsize))
+            times.append((t_start, t_start + binsize))
             t_start += binsize
             i += 1
     if antennas == "ALL":
@@ -73,8 +80,10 @@ def get_single_antenna_stats(ecohab_data, timeline, binsize, antennas="ALL",
     if antennas in ecohab_data.all_antennas:
         antennas = [antennas]
     if not isinstance(antennas, list):
-        raise Exception("""Incorrect antenna format.
-        You should either provide a list of ints, an int or 'ALL'""")
+        raise Exception(
+            """Incorrect antenna format.
+        You should either provide a list of ints, an int or 'ALL'"""
+        )
 
     for i, phase in enumerate(phases):
         t_start, t_end = times[i]
@@ -84,28 +93,44 @@ def get_single_antenna_stats(ecohab_data, timeline, binsize, antennas="ALL",
             count[antenna] = OrderedDict()
             durations[antenna] = OrderedDict()
             for mouse in mice:
-                results = ecohab_data.get_registration_stats(mouse,
-                                                             t_start,
-                                                             t_end,
-                                                             antenna,
-                                                             binsize)
+                results = ecohab_data.get_registration_stats(
+                    mouse, t_start, t_end, antenna, binsize
+                )
                 count[antenna][mouse], durations[antenna][mouse] = results
 
-            single_timeline_heat_map(durations[antenna],
-                                     res_dir,
-                                     mice,
-                                     prefix,
-                                     phase,
-                                     binsize,
-                                     antenna,
-                                     out_dir)
+            single_timeline_heat_map(
+                durations[antenna],
+                res_dir,
+                mice,
+                prefix,
+                phase,
+                binsize,
+                antenna,
+                out_dir,
+            )
         new_fname_count = "%s_%s" % (fname_count, antenna)
         new_fname_durations = "%s_%s" % (fname_durations, antenna)
-        write_registrations_stats(count, phase, mice, binsize,
-                                  new_fname_count, res_dir,
-                                  out_dir, prefix,
-                                  add_info=add_info_mice, delimiter=";")
-        write_registrations_stats(durations, phase, mice, binsize,
-                                  new_fname_durations, res_dir,
-                                  out_dir, prefix,
-                                  add_info=add_info_mice, delimiter=";")
+        write_registrations_stats(
+            count,
+            phase,
+            mice,
+            binsize,
+            new_fname_count,
+            res_dir,
+            out_dir,
+            prefix,
+            add_info=add_info_mice,
+            delimiter=";",
+        )
+        write_registrations_stats(
+            durations,
+            phase,
+            mice,
+            binsize,
+            new_fname_durations,
+            res_dir,
+            out_dir,
+            prefix,
+            add_info=add_info_mice,
+            delimiter=";",
+        )

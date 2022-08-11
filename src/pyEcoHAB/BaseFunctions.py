@@ -5,7 +5,6 @@ import numpy as np
 
 
 class DataBase(object):
-
     def __init__(self, data, mask):
         self.mask = None
         self._mask_slice = None
@@ -50,8 +49,7 @@ class DataBase(object):
             end = max(arr)
 
         self.mask = (start, end)
-        self._mask_slice = self. _find_mask_indices(self.mask,
-                                                    column_name)
+        self._mask_slice = self._find_mask_indices(self.mask, column_name)
 
     def unmask_data(self):
         """Remove the mask - future queries will not be clipped"""
@@ -61,7 +59,7 @@ class DataBase(object):
     def _cut_out_data(self, new_mask):
         mask = self._find_mask_indices(new_mask)
         for key in self.data.keys():
-            self.data[key] = self.data[key][mask[0]: mask[1]]
+            self.data[key] = self.data[key][mask[0] : mask[1]]
 
     def getproperty(self, mice, propname, astype=None):
         if sys.version_info < (3, 0):
@@ -73,22 +71,37 @@ class DataBase(object):
 
         if self.mask is None:
             if astype is None:
-                return [x[0] for x in zip(self.data[propname],
-                        self.data['Tag']) if x[1] in mice]
-            elif astype == 'float':
-                return [float(x[0]) for x in zip(self.data[propname],
-                        self.data['Tag']) if x[1] in mice]
+                return [
+                    x[0]
+                    for x in zip(self.data[propname], self.data["Tag"])
+                    if x[1] in mice
+                ]
+            elif astype == "float":
+                return [
+                    float(x[0])
+                    for x in zip(self.data[propname], self.data["Tag"])
+                    if x[1] in mice
+                ]
         else:
             mask_0, mask_1 = self._mask_slice[0], self._mask_slice[1]
             if astype is None:
-                return [x[0] for x in zip(self.data[propname][mask_0:mask_1],
-                                          self.data['Tag'][mask_0:mask_1])
-                        if x[1] in mice]
-            elif astype == 'float':
-                return [float(x[0]) for x in zip(
-                    self.data[propname][mask_0:mask_1],
-                    self.data['Tag'][mask_0:mask_1])
-                        if x[1] in mice]
+                return [
+                    x[0]
+                    for x in zip(
+                        self.data[propname][mask_0:mask_1],
+                        self.data["Tag"][mask_0:mask_1],
+                    )
+                    if x[1] in mice
+                ]
+            elif astype == "float":
+                return [
+                    float(x[0])
+                    for x in zip(
+                        self.data[propname][mask_0:mask_1],
+                        self.data["Tag"][mask_0:mask_1],
+                    )
+                    if x[1] in mice
+                ]
 
 
 class Data(DataBase):
@@ -96,13 +109,13 @@ class Data(DataBase):
         super(Data, self).__init__(data, mask)
 
     def get_antennas(self, mice):
-        return self.getproperty(mice, 'Antenna')
+        return self.getproperty(mice, "Antenna")
 
     def get_times(self, mice):
-        return self.getproperty(mice, 'Time', 'float')
+        return self.getproperty(mice, "Time", "float")
 
     def get_durations(self, mice):
-        return self.getproperty(mice, 'Duration')
+        return self.getproperty(mice, "Duration")
 
     def mask_data(self, mask):
         super(Data, self).mask_data(mask, column_name="Time")
@@ -113,16 +126,16 @@ class Visits(DataBase):
         super(Visits, self).__init__(data, mask)
 
     def get_starttimes(self, mice):
-        return self.getproperty(mice, 'AbsStartTimecode', 'float')
+        return self.getproperty(mice, "AbsStartTimecode", "float")
 
     def get_endtimes(self, mice):
-        return self.getproperty(mice, 'AbsEndTimecode', 'float')
+        return self.getproperty(mice, "AbsEndTimecode", "float")
 
     def get_durations(self, mice):
-        return self.getproperty(mice, 'VisitDuration', 'float')
+        return self.getproperty(mice, "VisitDuration", "float")
 
     def get_visit_addresses(self, mice):
-        return self.getproperty(mice, 'Address')
+        return self.getproperty(mice, "Address")
 
     def mask_data(self, mask):
         super(Visits, self).mask_data(mask, column_name="AbsStartTimecode")

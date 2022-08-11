@@ -14,18 +14,16 @@ import time
 import calendar
 import numpy as np
 import matplotlib as mpl
-if os.environ.get('DISPLAY', '') == '':
-    print('no display found. Using non-interactive Agg backend')
-    mpl.use('Agg')
+
+if os.environ.get("DISPLAY", "") == "":
+    print("no display found. Using non-interactive Agg backend")
+    mpl.use("Agg")
 import matplotlib.ticker
 import matplotlib.dates as mpd
 import matplotlib.pyplot as plt
 from pyEcoHAB import utility_functions as uf
 from pyEcoHAB.utils import for_loading as fl
 from pyEcoHAB.utils import temporal as temp
-
-
-
 
 
 class Timeline(ConfigParser, matplotlib.ticker.Formatter):
@@ -49,35 +47,46 @@ class Timeline(ConfigParser, matplotlib.ticker.Formatter):
     experiment are in UTC.
 
     """
-    def __init__(self, path, fname=None, dark_beginning="12:00",
-                 first_phase="dark", dark_length=12, light_length=12,
-                 phase_name="EMPTY"):
+
+    def __init__(
+        self,
+        path,
+        fname=None,
+        dark_beginning="12:00",
+        first_phase="dark",
+        dark_length=12,
+        light_length=12,
+        phase_name="EMPTY",
+    ):
         ConfigParser.__init__(self)
         self.path = path
         if fname is None:
             if os.path.isfile(path):
                 self.path = path
-            elif os.path.isfile(os.path.join(path, 'config.txt')):
-                fname = 'config.txt'
+            elif os.path.isfile(os.path.join(path, "config.txt")):
+                fname = "config.txt"
                 self.path = os.path.join(path, fname)
             else:
-                try: 
-                    fnames = filter(lambda x: x.startswith('config')
-                                    and x.endswith('.txt'),
-                                    os.listdir(path))[0]
-                
+                try:
+                    fnames = filter(
+                        lambda x: x.startswith("config") and x.endswith(".txt"),
+                        os.listdir(path),
+                    )[0]
+
                 except TypeError:
                     fname = "config.txt"
-                    config_dict = temp.gen_timeline(path,
-                                                    dark_beginning=dark_beginning,
-                                                    first_phase=first_phase,
-                                                    dark_length=dark_length,
-                                                    light_length=light_length,
-                                                    phase_name=phase_name)
+                    config_dict = temp.gen_timeline(
+                        path,
+                        dark_beginning=dark_beginning,
+                        first_phase=first_phase,
+                        dark_length=dark_length,
+                        light_length=light_length,
+                        phase_name=phase_name,
+                    )
                     config = ConfigParser()
                     config.read_dict(config_dict)
                     new_path = os.path.join(path, fname)
-                    with open(new_path, 'w') as configfile:
+                    with open(new_path, "w") as configfile:
                         config.write(configfile)
                 self.path = os.path.join(path, fname)
         else:
@@ -106,10 +115,8 @@ class Timeline(ConfigParser, matplotlib.ticker.Formatter):
         return min(starts), max(ends)
 
     def _time(self, phase):
-        tstr1 = "%s%s" % (self.get(phase, 'startdate'),
-                          self.get(phase, 'starttime'))
-        tstr2 = "%s%s" % (self.get(phase, 'enddate'),
-                          self.get(phase, 'endtime'))
+        tstr1 = "%s%s" % (self.get(phase, "startdate"), self.get(phase, "starttime"))
+        tstr2 = "%s%s" % (self.get(phase, "enddate"), self.get(phase, "endtime"))
         t1 = uf.to_struck(tstr1, self.path)
         t2 = uf.to_struck(tstr2, self.path)
         return t1, t2
@@ -135,7 +142,7 @@ class Timeline(ConfigParser, matplotlib.ticker.Formatter):
             t1, t2 = self.get_time_from_epoch(sec)
             if t1 <= x and x < t2:
                 return sec
-        return 'Unknown'
+        return "Unknown"
 
     def mark(self, sec, ax=None):
         """Mark given phases on the plot"""
@@ -143,7 +150,14 @@ class Timeline(ConfigParser, matplotlib.ticker.Formatter):
             ax = plt.gca()
         ylims = ax.get_ylim()
         for tt in self.get_time_from_epoch(sec):
-            ax.plot([mpd.epoch2num(tt), ] * 2, ylims, 'k:')
+            ax.plot(
+                [
+                    mpd.epoch2num(tt),
+                ]
+                * 2,
+                ylims,
+                "k:",
+            )
         plt.draw()
 
     def plot_sections(self):
@@ -151,18 +165,13 @@ class Timeline(ConfigParser, matplotlib.ticker.Formatter):
         figg = plt.figure()
         for idx, sec in enumerate(self.sections()):
             t1, t2 = mpd.epoch2num(self.get_time_from_epoch(sec))
-            plt.plot([t1, t2], [idx, idx], 'ko-')
-            plt.plot([t2], [idx], 'bo')
+            plt.plot([t1, t2], [idx, idx], "ko-")
+            plt.plot([t2], [idx], "bo")
             plt.text(t2 + 0.5, idx, sec)
         ax = plt.gca()
-        ax.xaxis.set_major_locator(mpd.HourLocator(np.array([00]),
-                                                   tz=tzone))
-        ax.xaxis.set_major_formatter(mpd.DateFormatter('%d.%m %H:%M',
-                                                       tz=tzone))
+        ax.xaxis.set_major_locator(mpd.HourLocator(np.array([00]), tz=tzone))
+        ax.xaxis.set_major_formatter(mpd.DateFormatter("%d.%m %H:%M", tz=tzone))
         ax.autoscale_view()
         ax.get_figure().autofmt_xdate()
         plt.title(self.path)
         plt.draw()
-
- 
-        

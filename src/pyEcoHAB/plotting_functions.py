@@ -9,9 +9,10 @@ from __future__ import division, print_function, absolute_import
 import os
 import numpy as np
 import matplotlib as mpl
-if os.environ.get('DISPLAY', '') == '':
-    print('no display found. Using non-interactive Agg backend')
-    mpl.use('Agg')
+
+if os.environ.get("DISPLAY", "") == "":
+    print("no display found. Using non-interactive Agg backend")
+    mpl.use("Agg")
 import matplotlib.pyplot as plt
 from . import utility_functions as utils
 
@@ -25,111 +26,118 @@ def make_labels(my_mice):
     return [mouse[:-5] for mouse in my_mice]
 
 
-def make_RasterPlot(main_directory,
-                    subdirectory,
-                    FAM,
-                    phases,
-                    name,
-                    old_mice,
-                    prefix='',
-                    to_file=True,
-                    vmin=None,
-                    vmax=None,
-                    title=None,
-                    symmetrical=True,
-                    full_dir_tree=True):
+def make_RasterPlot(
+    main_directory,
+    subdirectory,
+    FAM,
+    phases,
+    name,
+    old_mice,
+    prefix="",
+    to_file=True,
+    vmin=None,
+    vmax=None,
+    title=None,
+    symmetrical=True,
+    full_dir_tree=True,
+):
     mice = make_labels(old_mice)
     if full_dir_tree:
-        subdirectory = os.path.join(subdirectory, 'raster_plots')
+        subdirectory = os.path.join(subdirectory, "raster_plots")
     new_path = utils.check_directory(main_directory, subdirectory)
     if title:
-        plt.suptitle(title, fontsize=14, fontweight='bold')
+        plt.suptitle(title, fontsize=14, fontweight="bold")
     assert FAM.shape[0] == len(phases)
     assert FAM.shape[1] == len(mice)
     assert FAM.shape[2] == len(mice)
 
     if symmetrical:
-        output, pair_labels = utils.make_table_of_pairs(FAM,
-                                                        phases,
-                                                        mice)
+        output, pair_labels = utils.make_table_of_pairs(FAM, phases, mice)
     else:
-        output, pair_labels = utils.make_table_of_all_mouse_pairs(FAM,
-                                                                  phases,
-                                                                  mice)
-    fig = plt.figure(figsize=(len(phases), 0.5*FAM.shape[0]))
-    ax = fig.add_subplot(111, aspect='equal')
+        output, pair_labels = utils.make_table_of_all_mouse_pairs(FAM, phases, mice)
+    fig = plt.figure(figsize=(len(phases), 0.5 * FAM.shape[0]))
+    ax = fig.add_subplot(111, aspect="equal")
 
     if not vmax and not vmin:
         vmax = FAM.max()
         vmin = FAM.min()
-        if vmax*vmin <= 0:
+        if vmax * vmin <= 0:
             if abs(vmax) > abs(vmin):
                 vmin = -vmax
             else:
                 vmax = -vmin
-    if vmin*vmax < 0:
+    if vmin * vmax < 0:
         colormap = plt.cm.bwr
     else:
         colormap = plt.cm.Reds
-    cax = ax.imshow(output,
-                    interpolation='none',
-                    origin='lower',
-                    aspect='auto',
-                    vmin=vmin,
-                    vmax=vmax,
-                    cmap=colormap)
+    cax = ax.imshow(
+        output,
+        interpolation="none",
+        origin="lower",
+        aspect="auto",
+        vmin=vmin,
+        vmax=vmax,
+        cmap=colormap,
+    )
     cbar = fig.colorbar(cax, ax=ax, ticks=[vmin, 0, vmax])
     fig.subplots_adjust(left=0.25)
     ax.set_xticks([i for i in range(len(phases))])
     ax.set_yticks([i for i in range(len(pair_labels))])
-    assert(output.shape[0] == len(pair_labels))
+    assert output.shape[0] == len(pair_labels)
     ax.set_xticklabels(phases)
     ax.set_yticklabels(pair_labels)
     for tick in ax.get_xticklabels():
-            tick.set_rotation(90)
+        tick.set_rotation(90)
     fig.subplots_adjust(left=0.25)
     fig.subplots_adjust(bottom=0.25)
     if prefix:
         name = "%s_%s" % (prefix, name)
     new_name = os.path.join(new_path, name)
     print(new_name)
-    plt.savefig(new_name+".png",
-                transparent=False,
-                bbox_inches=None,
-                pad_inches=.5,
-                dpi=100)
+    plt.savefig(
+        new_name + ".png", transparent=False, bbox_inches=None, pad_inches=0.5, dpi=100
+    )
     plt.close(fig)
 
 
-def single_heat_map(result,
-                    name,
-                    directory,
-                    mice,
-                    prefix,
-                    phase,
-                    xlabel='',
-                    ylabel='',
-                    subdirectory=None,
-                    vmax=None,
-                    vmin=None,
-                    xticks=None,
-                    yticks=None):
-    name = '%s_%s_%s' % (name, prefix, phase)
+def single_heat_map(
+    result,
+    name,
+    directory,
+    mice,
+    prefix,
+    phase,
+    xlabel="",
+    ylabel="",
+    subdirectory=None,
+    vmax=None,
+    vmin=None,
+    xticks=None,
+    yticks=None,
+):
+    name = "%s_%s_%s" % (name, prefix, phase)
     fig, ax = plt.subplots()
     if vmin is None:
         vmin = result.min()
     if vmax is None:
         vmax = result.max()
 
-    cax = ax.imshow(result, interpolation='none', aspect='auto',
-                    cmap="viridis", origin="lower", vmin=vmin, vmax=vmax)
+    cax = ax.imshow(
+        result,
+        interpolation="none",
+        aspect="auto",
+        cmap="viridis",
+        origin="lower",
+        vmin=vmin,
+        vmax=vmax,
+    )
     cbar = fig.colorbar(cax)
     turn = False
     if not xticks:
-        xticks = [mouse.split('-')[-1] for mouse in mice]
+        xticks = [mouse.split("-")[-1] for mouse in mice]
         turn = True
     if not yticks:
-        yticks = [mouse.split('-')[-1] for mouse in mice]
+        yticks = [mouse.split("-")[-1] for mouse in mice]
         fig.subplots_adjust(left=0.25)
 
     ax.get_yaxis().set_ticks([i for i, x in enumerate(yticks)])
@@ -142,41 +150,46 @@ def single_heat_map(result,
         tick.set_rotation(90)
 
     if subdirectory:
-        subdirectory = os.path.join(subdirectory, 'figs')
+        subdirectory = os.path.join(subdirectory, "figs")
     dir_name = utils.check_directory(directory, subdirectory)
     new_name = os.path.join(dir_name, name)
     fig.subplots_adjust(left=0.25)
     fig.subplots_adjust(bottom=0.25)
-    fig.savefig(new_name + ".png", transparent=False, bbox_inches=None,
-                pad_inches=0.5,  dpi=100)
+    fig.savefig(
+        new_name + ".png", transparent=False, bbox_inches=None, pad_inches=0.5, dpi=100
+    )
     plt.close(fig)
 
 
-def single_timeline_heat_map(result,
-                             directory,
-                             mice,
-                             prefix,
-                             phase,
-                             binsize,
-                             antenna,
-                             subdirectory):
-    name = 'duration_of_antenna_%s_registration_%s_%4.2f_%s' % (antenna,
-                                                                prefix,
-                                                                binsize/3600,
-                                                                phase)
+def single_timeline_heat_map(
+    result, directory, mice, prefix, phase, binsize, antenna, subdirectory
+):
+    name = "duration_of_antenna_%s_registration_%s_%4.2f_%s" % (
+        antenna,
+        prefix,
+        binsize / 3600,
+        phase,
+    )
     fig, ax = plt.subplots()
     vmin = 0
-    vmax = 0.5*binsize
+    vmax = 0.5 * binsize
     length = len(result[mice[0]])
     out = np.zeros((len(mice), length))
     for j, mouse in enumerate(mice):
         out[j] = np.array(result[mouse])
 
-    cax = ax.imshow(out, interpolation='none', aspect='auto', cmap="viridis",
-                    origin="lower", vmin=vmin, vmax=vmax)
+    cax = ax.imshow(
+        out,
+        interpolation="none",
+        aspect="auto",
+        cmap="viridis",
+        origin="lower",
+        vmin=vmin,
+        vmax=vmax,
+    )
     cbar = fig.colorbar(cax)
     turn = False
-    yticks = [mouse.split('-')[-1] for mouse in mice]
+    yticks = [mouse.split("-")[-1] for mouse in mice]
 
     fig.subplots_adjust(left=0.25)
     ax.get_yaxis().set_ticks([i for i, x in enumerate(yticks)])
@@ -184,56 +197,63 @@ def single_timeline_heat_map(result,
     ax.set_xlabel("time (h)")
     ax.set_title("In range of antenna %s (in sec)" % antenna)
     if subdirectory:
-        subdirectory = os.path.join(subdirectory, 'figs')
+        subdirectory = os.path.join(subdirectory, "figs")
     dir_name = utils.check_directory(directory, subdirectory)
     new_name = os.path.join(dir_name, name)
     print(new_name)
     fig.subplots_adjust(left=0.25)
     fig.subplots_adjust(bottom=0.25)
-    fig.savefig(new_name + ".png", transparent=False, bbox_inches=None,
-                pad_inches=0.5,  dpi=100)
+    fig.savefig(
+        new_name + ".png", transparent=False, bbox_inches=None, pad_inches=0.5, dpi=100
+    )
     plt.close(fig)
 
 
-def single_in_cohort_soc_plot(results,
-                              results_exp,
-                              mice,
-                              phase,
-                              fname,
-                              main_directory,
-                              directory,
-                              prefix,
-                              vmin=0,
-                              vmax=1,
-                              vmin1=-1,
-                              vmax1=1,
-                              hist=True,
-                              titles=['% time together',
-                                      'Expected % time together',
-                                      'Excess % time together',
-                                      'Probability dist of excess % time together'],
-                              labels=['', ''],
-                              full_dir_tree=True):
+def single_in_cohort_soc_plot(
+    results,
+    results_exp,
+    mice,
+    phase,
+    fname,
+    main_directory,
+    directory,
+    prefix,
+    vmin=0,
+    vmax=1,
+    vmin1=-1,
+    vmax1=1,
+    hist=True,
+    titles=[
+        "% time together",
+        "Expected % time together",
+        "Excess % time together",
+        "Probability dist of excess % time together",
+    ],
+    labels=["", ""],
+    full_dir_tree=True,
+):
     if full_dir_tree:
-        new_name = os.path.join(directory, 'figs')
+        new_name = os.path.join(directory, "figs")
     else:
         new_name = directory
     directory = utils.check_directory(main_directory, new_name)
-    fname = os.path.join(directory, '%s_%s_%s' % (fname, prefix, phase))
+    fname = os.path.join(directory, "%s_%s_%s" % (fname, prefix, phase))
     print(fname)
     label_mice = make_labels(mice)
     fig = plt.figure(figsize=(10, 6))
     ax = []
     for i in range(1, 5):
         ax.append(fig.add_subplot(2, 2, i))
-    im2 = ax[0].imshow(results, vmin=vmin, vmax=vmax,
-                       interpolation='none', origin='lower')
+    im2 = ax[0].imshow(
+        results, vmin=vmin, vmax=vmax, interpolation="none", origin="lower"
+    )
     cbar = fig.colorbar(im2)
     ax[0].set_xticks([])
     ax[0].set_yticks([])
     ax[0].set_title(titles[0])
-    ax[1].imshow(results_exp, vmin=vmin, vmax=vmax,
-                 interpolation='none', origin='lower')
+    ax[1].imshow(
+        results_exp, vmin=vmin, vmax=vmax, interpolation="none", origin="lower"
+    )
     ax[1].set_xticks([])
     ax[1].set_yticks([])
     ax[1].set_title(titles[1])
@@ -246,12 +266,14 @@ def single_in_cohort_soc_plot(results,
         else:
             mini = vmin1
             maxi = vmax1
-        im = ax[2].imshow(results - results_exp,
-                          vmin=mini,
-                          vmax=maxi,
-                          interpolation='none',
-                          cmap='bwr',
-                          origin='lower')
+        im = ax[2].imshow(
+            results - results_exp,
+            vmin=mini,
+            vmax=maxi,
+            interpolation="none",
+            cmap="bwr",
+            origin="lower",
+        )
         ax[2].set_title(titles[2])
         cbar = fig.colorbar(im)
         ax[2].yaxis.tick_left()
@@ -273,8 +295,8 @@ def single_in_cohort_soc_plot(results,
     ax[3].set_title(titles[3])
     if hist is True:
         ax[3].set_xlim([-0.1, 0.5])
-        ax[3].get_xaxis().set_ticks([-0.1, 0., 0.1, 0.2, 0.3])
-        ax[3].set_xticklabels([-0.1, 0., 0.1, 0.2, 0.3])
+        ax[3].get_xaxis().set_ticks([-0.1, 0.0, 0.1, 0.2, 0.3])
+        ax[3].set_xticklabels([-0.1, 0.0, 0.1, 0.2, 0.3])
     else:
         ax[3].set_xlim([vmin1, vmax1])
         ticks = np.linspace(vmin1, vmax1, 4)
@@ -289,43 +311,56 @@ def single_in_cohort_soc_plot(results,
     fig.subplots_adjust(bottom=0.1)
     fig.subplots_adjust(wspace=0.25)
     fig.subplots_adjust(hspace=0.3)
-    fig.savefig(fname+'.png', dpi=100,  bbox_inches=None,
-                pad_inches=2)
+    fig.savefig(fname + ".png", dpi=100, bbox_inches=None, pad_inches=2)
     plt.close(fig)
-    print(fname+'.png')
+    print(fname + ".png")
 
 
-def pooled_hists(res, res_exp, phases, fname, main_directory, directory,
-                 prefix, additional_info, full_dir_tree=True):
+def pooled_hists(
+    res,
+    res_exp,
+    phases,
+    fname,
+    main_directory,
+    directory,
+    prefix,
+    additional_info,
+    full_dir_tree=True,
+):
 
-    fig, ax = plt.subplots(1, len(phases),
-                           figsize=(2.5 + (len(phases) - 1)//2*5, 5))
+    fig, ax = plt.subplots(
+        1, len(phases), figsize=(2.5 + (len(phases) - 1) // 2 * 5, 5)
+    )
     if len(phases) == 1:
         ax = [ax]
-        new_phase = phases[0].replace(' ', '__')
+        new_phase = phases[0].replace(" ", "__")
     else:
-        new_phase = "%s_%s" % (phases[0].replace(' ', '__'),
-                               phases[-1].replace(' ', '__'))
+        new_phase = "%s_%s" % (
+            phases[0].replace(" ", "__"),
+            phases[-1].replace(" ", "__"),
+        )
     bins, counts = [], []
     xticks = True
     for i, phase in enumerate(phases):
-        results = utils.dict_to_array_2D(res[phase][0],
-                                         list(res[phase][0].keys()),
-                                         list(res[phase][0].keys()))
-        results_exp = utils.dict_to_array_2D(res_exp[phase][0],
-                                             list(res[phase][0].keys()),
-                                             list(res[phase][0].keys()))
+        results = utils.dict_to_array_2D(
+            res[phase][0], list(res[phase][0].keys()), list(res[phase][0].keys())
+        )
+        results_exp = utils.dict_to_array_2D(
+            res_exp[phase][0], list(res[phase][0].keys()), list(res[phase][0].keys())
+        )
 
         deltas = results[results > 0] - results_exp[results > 0]
         new_title = phases[i]
         yticks = not i
-        minb, maxb, minc, maxc = make_single_histogram(ax[i],
-                                                       deltas,
-                                                       10,
-                                                       title=new_title,
-                                                       xticks=xticks,
-                                                       yticks=yticks,
-                                                       xlogscale=False)
+        minb, maxb, minc, maxc = make_single_histogram(
+            ax[i],
+            deltas,
+            10,
+            title=new_title,
+            xticks=xticks,
+            yticks=yticks,
+            xlogscale=False,
+        )
         bins.extend([minb, maxb])
         counts.extend([minc, maxc])
     min_bins, max_bins = min(bins), max(bins)
@@ -334,25 +369,31 @@ def pooled_hists(res, res_exp, phases, fname, main_directory, directory,
         x.set_xlim([min_bins, max_bins + 1])
         x.set_ylim([min_count, max_count + 3])
     if full_dir_tree:
-        directory = os.path.join(directory, 'figs')
+        directory = os.path.join(directory, "figs")
     directory = utils.check_directory(main_directory, directory)
-    fname = os.path.join(directory, '%s_%s_%s' % (fname, prefix,
-                                                  new_phase))
+    fname = os.path.join(directory, "%s_%s_%s" % (fname, prefix, new_phase))
     if len(phases) > 1:
         fig.subplots_adjust(wspace=0.15)
-    fig.savefig(fname + '.png', dpi=100, bbox_inches=None,
-                pad_inches=0.5)
+    fig.savefig(fname + ".png", dpi=100, bbox_inches=None, pad_inches=0.5)
     plt.close(fig)
 
 
-def make_histograms_for_every_mouse(results, fname, mice, main_directory,
-                                    directory, prefix, additional_info,
-                                    full_dir_tree=True):
+def make_histograms_for_every_mouse(
+    results,
+    fname,
+    mice,
+    main_directory,
+    directory,
+    prefix,
+    additional_info,
+    full_dir_tree=True,
+):
     """
     results should be a dictionary of lists
     """
-    fig, ax = plt.subplots(len(mice), len(mice),
-                           figsize=(len(mice)//2*5, len(mice)//2*5))
+    fig, ax = plt.subplots(
+        len(mice), len(mice), figsize=(len(mice) // 2 * 5, len(mice) // 2 * 5)
+    )
     bins, counts = [], []
     new_name = "all_mice"
     xlabel = None
@@ -382,15 +423,17 @@ def make_histograms_for_every_mouse(results, fname, mice, main_directory,
 
             key = "%s|%s" % (mouse1, mouse2)
             intervals = results[key]
-            minb, maxb, minc, maxc = make_single_histogram(ax[i, j],
-                                                           intervals,
-                                                           30,
-                                                           title=new_title,
-                                                           xticks=xticks,
-                                                           yticks=yticks,
-                                                           xlabel=xlabel,
-                                                           ylabel=ylabel,
-                                                           xlogscale=True)
+            minb, maxb, minc, maxc = make_single_histogram(
+                ax[i, j],
+                intervals,
+                30,
+                title=new_title,
+                xticks=xticks,
+                yticks=yticks,
+                xlabel=xlabel,
+                ylabel=ylabel,
+                xlogscale=True,
+            )
             bins.extend([minb, maxb])
             counts.extend([minc, maxc])
     min_bin, max_bin = min(bins), max(bins)
@@ -400,23 +443,20 @@ def make_histograms_for_every_mouse(results, fname, mice, main_directory,
             x.set_xlim([min_bin, max_bin + 1])
             x.set_ylim([min_count, max_count + 3])
     if full_dir_tree:
-        directory = os.path.join(directory, 'figs')
+        directory = os.path.join(directory, "figs")
     dir_name = utils.check_directory(main_directory, directory)
     plt.gcf().text(0.02, 0.5, "Followed mouse", fontsize=28, rotation=90)
     plt.gcf().text(0.5, 0.02, "Following mouse", fontsize=28)
 
     if prefix != "":
-        new_name = '%s_%s_%s' % (fname, prefix, new_name)
+        new_name = "%s_%s_%s" % (fname, prefix, new_name)
     else:
-        new_name = '%s_%s' % (fname, new_name)
+        new_name = "%s_%s" % (fname, new_name)
 
     fname = os.path.join(dir_name, new_name)
     print(fname)
     fig.subplots_adjust(wspace=0.15)
-    fig.savefig(fname + ".png",
-                bbox_inches=None,
-                pad_inches=.5,
-                dpi=100)
+    fig.savefig(fname + ".png", bbox_inches=None, pad_inches=0.5, dpi=100)
     plt.close(fig)
 
 
@@ -442,17 +482,29 @@ def pool_results_followed(res_dict, mice):
     return pooled_results
 
 
-def single_histogram_figures(single_results, fname, main_directory,
-                             path, title, nbins=10,
-                             xlabel=None, ylabel=None,
-                             fontsize=14, xlogscale=False,
-                             ylogscale=False, xmin=None, xmax=None,
-                             ymin=None, ymax=None,
-                             median_mean=False, add_text="",
-                             full_dir_tree=True):
+def single_histogram_figures(
+    single_results,
+    fname,
+    main_directory,
+    path,
+    title,
+    nbins=10,
+    xlabel=None,
+    ylabel=None,
+    fontsize=14,
+    xlogscale=False,
+    ylogscale=False,
+    xmin=None,
+    xmax=None,
+    ymin=None,
+    ymax=None,
+    median_mean=False,
+    add_text="",
+    full_dir_tree=True,
+):
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
     if full_dir_tree:
-        new_dir = os.path.join(path, 'figs')
+        new_dir = os.path.join(path, "figs")
     else:
         new_dir = path
     dir_name = utils.check_directory(main_directory, new_dir)
@@ -462,26 +514,47 @@ def single_histogram_figures(single_results, fname, main_directory,
     if add_text:
         title += add_text
 
-    make_single_histogram(ax, single_results, nbins, title=title,
-                          xticks=True,
-                          yticks=True, xlabel=xlabel, ylabel=ylabel,
-                          xlogscale=xlogscale, ylogscale=ylogscale,
-                          fontsize=fontsize, xmin=xmin, xmax=xmax,
-                          ymin=ymin, ymax=ymax,
-                          median_mean=median_mean)
-    fig.savefig(new_fname + ".png",
-                bbox_inches=None,
-                pad_inches=.5,
-                dpi=100)
+    make_single_histogram(
+        ax,
+        single_results,
+        nbins,
+        title=title,
+        xticks=True,
+        yticks=True,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        xlogscale=xlogscale,
+        ylogscale=ylogscale,
+        fontsize=fontsize,
+        xmin=xmin,
+        xmax=xmax,
+        ymin=ymin,
+        ymax=ymax,
+        median_mean=median_mean,
+    )
+    fig.savefig(new_fname + ".png", bbox_inches=None, pad_inches=0.5, dpi=100)
     print(new_fname)
     plt.close(fig)
 
 
-def make_single_histogram(ax, single_results, nbins, title="", xticks=False,
-                          yticks=False, xlabel=None, ylabel=None,
-                          xlogscale=False, ylogscale=False, fontsize=14,
-                          xmin=None, xmax=None, ymin=None, ymax=None,
-                          median_mean=False):
+def make_single_histogram(
+    ax,
+    single_results,
+    nbins,
+    title="",
+    xticks=False,
+    yticks=False,
+    xlabel=None,
+    ylabel=None,
+    xlogscale=False,
+    ylogscale=False,
+    fontsize=14,
+    xmin=None,
+    xmax=None,
+    ymin=None,
+    ymax=None,
+    median_mean=False,
+):
     if len(single_results) == 0:
         ax.set_yticklabels([])
         ax.set_xticklabels([])
@@ -495,14 +568,14 @@ def make_single_histogram(ax, single_results, nbins, title="", xticks=False,
         n, bins, patches = ax.hist(single_results, bins=nbins)
 
     if ylogscale:
-        ax.set_yscale('log')
+        ax.set_yscale("log")
     if xlabel is not None:
         ax.set_xlabel(xlabel, fontsize=fontsize)
     if ylabel is not None:
         ax.set_ylabel(ylabel, fontsize=fontsize)
     if yticks:
         for tick in ax.yaxis.get_major_ticks():
-                tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontsize(fontsize)
     else:
         ax.set_yticklabels([])
     if xticks:
@@ -518,24 +591,24 @@ def make_single_histogram(ax, single_results, nbins, title="", xticks=False,
     if ymin is None:
         ymin = 0
     if ymax is None:
-        ymax = max(n)+1
+        ymax = max(n) + 1
     ax.set_xlim([xmin, xmax])
     ax.set_ylim([ymin, ymax])
 
     if median_mean is True:
         mean = np.mean(single_results)
         median = np.median(single_results)
-        ax.axvline(mean, color='k', linestyle='dashed', linewidth=1)
-        ax.axvline(median, color='r', linestyle='dashed', linewidth=1)
+        ax.axvline(mean, color="k", linestyle="dashed", linewidth=1)
+        ax.axvline(median, color="r", linestyle="dashed", linewidth=1)
         ylims = ax.get_ylim()
-        ax.text(mean*0.9, (ylims[1]-ylims[0])*0.8, "mean = %4.1f" % mean)
-        ax.text(median*0.9, (ylims[1]-ylims[0])*0.9, "median = %4.1f" % median)
+        ax.text(mean * 0.9, (ylims[1] - ylims[0]) * 0.8, "mean = %4.1f" % mean)
+        ax.text(median * 0.9, (ylims[1] - ylims[0]) * 0.9, "median = %4.1f" % median)
     return bins.min(), bins.max(), min(n), max(n)
 
 
 def make_fig_histogram(results, path, title):
     mice = list(results.keys())
-    fig, ax = plt.subplots(1, len(mice), figsize=(len(mice)//2*5, 5))
+    fig, ax = plt.subplots(1, len(mice), figsize=(len(mice) // 2 * 5, 5))
     bins = []
     counts = []
     xticks = True
@@ -543,13 +616,15 @@ def make_fig_histogram(results, path, title):
         yticks = not i
         new_title = "%s %s" % (title, mouse)
         intervals = results[mouse]
-        minb, maxb, minc, maxc = make_single_histogram(ax[i],
-                                                       intervals,
-                                                       30,
-                                                       title=new_title,
-                                                       xticks=xticks,
-                                                       yticks=yticks,
-                                                       xlogscale=True)
+        minb, maxb, minc, maxc = make_single_histogram(
+            ax[i],
+            intervals,
+            30,
+            title=new_title,
+            xticks=xticks,
+            yticks=yticks,
+            xlogscale=True,
+        )
         bins.extend([minb, maxb])
         counts.extend([minc, maxc])
     min_bin, max_bin = min(bins), max(bins)
@@ -558,55 +633,66 @@ def make_fig_histogram(results, path, title):
         if min_bin == max_bin == max_count == min_count:
             continue
     fig.subplots_adjust(wspace=0.15)
-    fig.savefig(path + ".png", dpi=100,
-                bbox_inches=None,
-                pad_inches=.5)
+    fig.savefig(path + ".png", dpi=100, bbox_inches=None, pad_inches=0.5)
     print(path)
     plt.close(fig)
 
 
-def pooled_hists_for_every_mouse(results, fname, mice, main_directory,
-                                 directory, prefix, additional_info,
-                                 full_dir_tree=True):
+def pooled_hists_for_every_mouse(
+    results,
+    fname,
+    mice,
+    main_directory,
+    directory,
+    prefix,
+    additional_info,
+    full_dir_tree=True,
+):
     results_following = pool_results_following(results, mice)
     results_followed = pool_results_followed(results, mice)
     new_name_following = "pooled_following"
     new_name_followed = "pooled_followed"
     if full_dir_tree:
-        directory = os.path.join(directory, 'figs')
+        directory = os.path.join(directory, "figs")
     dir_name = utils.check_directory(main_directory, directory)
 
     if prefix != "":
-        new_name_following = '%s_%s_%s' % (fname, prefix, new_name_following)
-        new_name_followed = '%s_%s_%s' % (fname, prefix, new_name_followed)
+        new_name_following = "%s_%s_%s" % (fname, prefix, new_name_following)
+        new_name_followed = "%s_%s_%s" % (fname, prefix, new_name_followed)
     else:
-        new_name_following = '%s_%s' % (fname, new_name_following)
-        new_name_followed = '%s_%s' % (fname, new_name_followed)
+        new_name_following = "%s_%s" % (fname, new_name_following)
+        new_name_followed = "%s_%s" % (fname, new_name_followed)
 
     fname_following = os.path.join(dir_name, new_name_following)
     fname_followed = os.path.join(dir_name, new_name_followed)
-    make_fig_histogram(results_following, fname_following,
-                       "following")
-    make_fig_histogram(results_followed, fname_followed,
-                       "followed")
+    make_fig_histogram(results_following, fname_following, "following")
+    make_fig_histogram(results_followed, fname_followed, "followed")
 
 
-def make_visit_duration_histogram(results, time, phase, mice,
-                                  fname, main_directory,
-                                  directory, prefix, additional_info):
+def make_visit_duration_histogram(
+    results,
+    time,
+    phase,
+    mice,
+    fname,
+    main_directory,
+    directory,
+    prefix,
+    additional_info,
+):
 
     dir_name = os.path.join(main_directory, directory)
     dir_name = utils.check_directory(dir_name, "figs")
 
     for mouse in mice:
         if prefix != "":
-            new_name = '%s_%s_%s_%s' % (fname, mouse, prefix, phase)
+            new_name = "%s_%s_%s_%s" % (fname, mouse, prefix, phase)
         else:
-            new_name = '%s_%s_%s' % (fname, mouse, phase)
+            new_name = "%s_%s_%s" % (fname, mouse, phase)
         new_name = os.path.join(dir_name, new_name)
         ncols = len(results.keys())
         nrows = len(results[list(results.keys())[0]][mouse])
-        fig, ax = plt.subplots(nrows, ncols, figsize=(ncols*4, nrows*2.5))
+        fig, ax = plt.subplots(nrows, ncols, figsize=(ncols * 4, nrows * 2.5))
         fontsize = 14 + nrows
         if nrows == 1:
             ax = np.expand_dims(ax, 0)
@@ -626,16 +712,18 @@ def make_visit_duration_histogram(results, time, phase, mice,
                     xticks = False
                     xlabel = None
 
-                minb, maxb, minc,\
-                    maxc = make_single_histogram(ax[j, i], out,
-                                                 10,
-                                                 title=key,
-                                                 xticks=xticks,
-                                                 yticks=yticks,
-                                                 xlabel=xlabel,
-                                                 ylabel=ylabel,
-                                                 xlogscale=True,
-                                                 fontsize=fontsize)
+                minb, maxb, minc, maxc = make_single_histogram(
+                    ax[j, i],
+                    out,
+                    10,
+                    title=key,
+                    xticks=xticks,
+                    yticks=yticks,
+                    xlabel=xlabel,
+                    ylabel=ylabel,
+                    xlogscale=True,
+                    fontsize=fontsize,
+                )
                 bins.extend([minb, maxb])
                 counts.extend([minc, maxc])
         min_bin, max_bin = min(bins), max(bins)
@@ -644,30 +732,34 @@ def make_visit_duration_histogram(results, time, phase, mice,
             for x in s:
                 x.set_xlim([min_bin, max_bin + 1])
                 x.set_ylim([min_count, max_count + 3])
-        fig.suptitle("%s visit durations in %s" % (mouse, phase),
-                     fontsize=fontsize+2)
+        fig.suptitle("%s visit durations in %s" % (mouse, phase), fontsize=fontsize + 2)
         fig.subplots_adjust(wspace=0.15)
-        fig.savefig(new_name + ".png", dpi=100,
-                    bbox_inches=None,
-                    pad_inches=.5)
+        fig.savefig(new_name + ".png", dpi=100, bbox_inches=None, pad_inches=0.5)
         print(new_name)
         plt.close(fig)
 
 
-def histograms_antenna_transitions(t_times, setup_config,
-                                   main_directory, directory, fname, prefix,
-                                   xmin=None, xmax=None, ymin=None, ymax=None,
-                                   additional_info=""):
-    dir_correct_same = os.path.join(directory, "correct_antenna_transition",
-                                    "same_antenna")
-    dir_correct_cage = os.path.join(directory,
-                                    "correct_antenna_transition",
-                                    "cages")
-    dir_correct_tunnel = os.path.join(directory,
-                                      "correct_antenna_transition",
-                                      "tunnels")
-    dir_incorrect = os.path.join(directory,
-                                 "incorrect_antenna_transition")
+def histograms_antenna_transitions(
+    t_times,
+    setup_config,
+    main_directory,
+    directory,
+    fname,
+    prefix,
+    xmin=None,
+    xmax=None,
+    ymin=None,
+    ymax=None,
+    additional_info="",
+):
+    dir_correct_same = os.path.join(
+        directory, "correct_antenna_transition", "same_antenna"
+    )
+    dir_correct_cage = os.path.join(directory, "correct_antenna_transition", "cages")
+    dir_correct_tunnel = os.path.join(
+        directory, "correct_antenna_transition", "tunnels"
+    )
+    dir_incorrect = os.path.join(directory, "incorrect_antenna_transition")
     cage_pd = setup_config.cage_pair_dict()
     tunnel_pd = setup_config.tunnel_pair_dict()
     title_double_a = "consecutive reading by antenna %s (%s) %s at %s"
@@ -708,46 +800,45 @@ def histograms_antenna_transitions(t_times, setup_config,
                         allowed_keys[ph].append(key)
                     if first == last:
                         dir_name[key] = dir_correct_same
-                        title[ph][lab][key] = title_double_a %\
-                            (first,
-                             setup_config.address[first],
-                             ph,
-                             lab)
-                        dest_fname[ph][lab][key] =\
-                            "%s_%s_%s_%s_start_at_%d" %\
-                            (fname,
-                             setup_config.address[first].replace(" ", "_"),
-                             key.replace(" ", "_"),
-                             ph.replace(" ", "_"),
-                             lab)
+                        title[ph][lab][key] = title_double_a % (
+                            first,
+                            setup_config.address[first],
+                            ph,
+                            lab,
+                        )
+                        dest_fname[ph][lab][key] = "%s_%s_%s_%s_start_at_%d" % (
+                            fname,
+                            setup_config.address[first].replace(" ", "_"),
+                            key.replace(" ", "_"),
+                            ph.replace(" ", "_"),
+                            lab,
+                        )
                     else:
                         if key in setup_config.tunnel_pairs():
                             dir_name[key] = dir_correct_tunnel
-                            title[ph][lab][key] = title_other %\
-                                (tunnel_pd[key],
-                                 ph,
-                                 lab)
-                            dest_fname[ph][lab][key] =\
-                                "%s_%s_%s_%s_start_at_%d" %\
-                                (fname,
-                                 tunnel_pd[key].replace(" ", "_"),
-                                 key.replace(" ", "_"),
-                                 ph.replace(" ", "_"),
-                                 lab)
+                            title[ph][lab][key] = title_other % (
+                                tunnel_pd[key],
+                                ph,
+                                lab,
+                            )
+                            dest_fname[ph][lab][key] = "%s_%s_%s_%s_start_at_%d" % (
+                                fname,
+                                tunnel_pd[key].replace(" ", "_"),
+                                key.replace(" ", "_"),
+                                ph.replace(" ", "_"),
+                                lab,
+                            )
 
                         else:
                             dir_name[key] = dir_correct_cage
-                            title[ph][lab][key] = title_other %\
-                                (cage_pd[key],
-                                 ph,
-                                 lab)
-                            dest_fname[ph][lab][key] =\
-                                "%s_%s_%s_%s_start_at_%s" %\
-                                (fname,
-                                 cage_pd[key].replace(" ", "_"),
-                                 key.replace(" ", "_"),
-                                 ph.replace(" ", "_"),
-                                 lab)
+                            title[ph][lab][key] = title_other % (cage_pd[key], ph, lab)
+                            dest_fname[ph][lab][key] = "%s_%s_%s_%s_start_at_%s" % (
+                                fname,
+                                cage_pd[key].replace(" ", "_"),
+                                key.replace(" ", "_"),
+                                ph.replace(" ", "_"),
+                                lab,
+                            )
 
                 except ValueError:
                     allowed_keys[ph].append(key)
@@ -755,13 +846,13 @@ def histograms_antenna_transitions(t_times, setup_config,
                         dir_name[key] = dir_correct_tunnel
                     elif key == "cages":
                         dir_name[key] = dir_correct_cage
-                    title[ph][lab][key] = "%s phase %s at %s" %\
-                        (key, ph, lab)
-                    dest_fname[ph][lab][key] = "%s_%s_%s_start_at_%s" %\
-                        (fname,
-                         key.replace(" ", "_"),
-                         ph.replace(" ", "_"),
-                         lab)
+                    title[ph][lab][key] = "%s phase %s at %s" % (key, ph, lab)
+                    dest_fname[ph][lab][key] = "%s_%s_%s_start_at_%s" % (
+                        fname,
+                        key.replace(" ", "_"),
+                        ph.replace(" ", "_"),
+                        lab,
+                    )
                 xlogscale[ph][lab][key] = True
                 nbins[ph][lab][key] = 10
                 if len(t_times[ph][lab][key]) > 1000:
@@ -771,14 +862,12 @@ def histograms_antenna_transitions(t_times, setup_config,
                         t_times[ph][lab][key].remove(0)
                     else:
                         break
-                hist, bins = np.histogram(t_times[ph][lab][key],
-                                          nbins[ph][lab][key])
+                hist, bins = np.histogram(t_times[ph][lab][key], nbins[ph][lab][key])
                 if xlogscale[ph][lab][key]:
-                    logbins = np.logspace(np.log10(bins[0]),
-                                          np.log10(bins[-1]),
-                                          len(bins))
-                    hist, bins = np.histogram(t_times[ph][lab][key],
-                                              bins=logbins)
+                    logbins = np.logspace(
+                        np.log10(bins[0]), np.log10(bins[-1]), len(bins)
+                    )
+                    hist, bins = np.histogram(t_times[ph][lab][key], bins=logbins)
                 if max(hist) > max_count:
                     max_count = max(hist)
                 if new_xmin > min(t_times[ph][lab][key]):
@@ -798,22 +887,34 @@ def histograms_antenna_transitions(t_times, setup_config,
             for key in allowed_keys[ph]:
                 if not len(t_times[ph][lab][key]):
                     continue
-                single_histogram_figures(t_times[ph][lab][key],
-                                         dest_fname[ph][lab][key],
-                                         main_directory, dir_name[key],
-                                         title[ph][lab][key],
-                                         nbins=nbins[ph][lab][key],
-                                         xlogscale=xlogscale[ph][lab][key],
-                                         xlabel="Transition times (s)",
-                                         ylabel="count", xmin=xmin, xmax=xmax,
-                                         ymin=0, ymax=ymax,
-                                         fontsize=14, median_mean=True)
-    single_histogram_figures(incorrect_transitions, "incorrect_transitions",
-                             main_directory, dir_incorrect,
-                             "Incorrect antenna transitions",
-                             nbins=30,
-                             xlogscale=True,
-                             xlabel="Transition times (s)",
-                             ylabel="count",
-                             fontsize=14, median_mean=True)
+                single_histogram_figures(
+                    t_times[ph][lab][key],
+                    dest_fname[ph][lab][key],
+                    main_directory,
+                    dir_name[key],
+                    title[ph][lab][key],
+                    nbins=nbins[ph][lab][key],
+                    xlogscale=xlogscale[ph][lab][key],
+                    xlabel="Transition times (s)",
+                    ylabel="count",
+                    xmin=xmin,
+                    xmax=xmax,
+                    ymin=0,
+                    ymax=ymax,
+                    fontsize=14,
+                    median_mean=True,
+                )
+    single_histogram_figures(
+        incorrect_transitions,
+        "incorrect_transitions",
+        main_directory,
+        dir_incorrect,
+        "Incorrect antenna transitions",
+        nbins=30,
+        xlogscale=True,
+        xlabel="Transition times (s)",
+        ylabel="count",
+        fontsize=14,
+        median_mean=True,
+    )
     return incorrect_transitions

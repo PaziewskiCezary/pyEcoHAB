@@ -40,14 +40,13 @@ def get_visits(intervals, t_start, t_stop):
     return visit_list, added_interval
 
 
-def get_visits_in_bins(intervals, time_start,
-                       time_stop, binsize):
+def get_visits_in_bins(intervals, time_start, time_stop, binsize):
     length = utils.get_length(time_start, time_stop, binsize)
     visits = []
     added_visit = []
     for i in range(length):
-        t_start = time_start + i*binsize
-        t_end = time_start + (i+1)*binsize
+        t_start = time_start + i * binsize
+        t_end = time_start + (i + 1) * binsize
         if t_end > time_stop:
             t_end = time_stop
         last_visits, outs = get_visits(intervals, t_start, t_end)
@@ -57,10 +56,7 @@ def get_visits_in_bins(intervals, time_start,
 
 
 def calc_visit_per_mouse(intervals, t_start, t_end, binsize):
-    visits_in_bins, added_visit = get_visits_in_bins(intervals,
-                                                     t_start,
-                                                     t_end,
-                                                     binsize)
+    visits_in_bins, added_visit = get_visits_in_bins(intervals, t_start, t_end, binsize)
     visits = []
     for i, o in enumerate(visits_in_bins):
         visits.append(len(o) - added_visit[i])
@@ -68,24 +64,29 @@ def calc_visit_per_mouse(intervals, t_start, t_end, binsize):
     return visits, durations, visits_in_bins
 
 
-def calculate_visits_and_durations(data, mice, address, t_start, t_end,
-                                   binsize):
+def calculate_visits_and_durations(data, mice, address, t_start, t_end, binsize):
     visits = OrderedDict()
     durations = OrderedDict()
     all_visits = OrderedDict()
     for m in mice:
         ints = utils.get_intervals(data[m], address)
-        visits[m], durations[m], all_visits[m] = calc_visit_per_mouse(ints,
-                                                                      t_start,
-                                                                      t_end,
-                                                                      binsize)
+        visits[m], durations[m], all_visits[m] = calc_visit_per_mouse(
+            ints, t_start, t_end, binsize
+        )
     return visits, durations, all_visits
 
 
-def get_activity(ecohab_data, timeline, binsize, res_dir="", prefix="",
-                 remove_mouse="", save_histogram=False, delimiter=";",
-                 headers=['Number of visits to',
-                          'Total time (sec) in']):
+def get_activity(
+    ecohab_data,
+    timeline,
+    binsize,
+    res_dir="",
+    prefix="",
+    remove_mouse="",
+    save_histogram=False,
+    delimiter=";",
+    headers=["Number of visits to", "Total time (sec) in"],
+):
     """Calculate activity of each mouse in time bins across the phases
     of the experiment.
 
@@ -153,11 +154,10 @@ def get_activity(ecohab_data, timeline, binsize, res_dir="", prefix="",
     add_info_mice = utils.add_info_mice_filename(remove_mouse)
     if isinstance(binsize, int) or isinstance(binsize, float):
         binlen = binsize
-        fname = '%sactivity_bin_%3.2f_h.csv' % (prefix,
-                                                binsize/3600)
-        histogram_fname = 'activity_histograms_bin_%3.1f_h' % (binsize/3600)
+        fname = "%sactivity_bin_%3.2f_h.csv" % (prefix, binsize / 3600)
+        histogram_fname = "activity_histograms_bin_%3.1f_h" % (binsize / 3600)
 
-        if binlen > 12*3600:
+        if binlen > 12 * 3600:
             t_start = timeline.get_time_from_epoch(phases[0])[0]
             t_end = timeline.get_time_from_epoch(phases[-1])[-1]
             phases = []
@@ -182,11 +182,10 @@ def get_activity(ecohab_data, timeline, binsize, res_dir="", prefix="",
         else:
             times = [timeline.get_time_from_epoch(phase) for phase in phases]
 
-        fname = '%sactivity_bin_%s.csv' % (prefix,
-                                           binsize)
-        histogram_fname = 'activity_histograms_bin_%s' % binsize
+        fname = "%sactivity_bin_%s.csv" % (prefix, binsize)
+        histogram_fname = "activity_histograms_bin_%s" % binsize
 
-    phase_len = max([t2-t1 for (t1, t2) in times])
+    phase_len = max([t2 - t1 for (t1, t2) in times])
     data = {c: {0: {}, 1: {}} for c in ecohab_data.cages}
     ecohab_data_data = utils.prepare_data(ecohab_data, mice)
     bin_labels = {}
@@ -194,38 +193,53 @@ def get_activity(ecohab_data, timeline, binsize, res_dir="", prefix="",
         t_start, t_end = times[idx_phase]
         visits_in_cages = {}
         if isinstance(binsize, str):
-            binlen = t_end-t_start
+            binlen = t_end - t_start
             bin_labels[phase] = utils.get_times(binlen, time_end=binlen)
         else:
             bin_labels[phase] = utils.get_times(binlen, time_end=phase_len)
         for address in ecohab_data.cages:
-            visit_data = calculate_visits_and_durations(ecohab_data_data,
-                                                        mice,
-                                                        address,
-                                                        t_start,
-                                                        t_end,
-                                                        binlen)
+            visit_data = calculate_visits_and_durations(
+                ecohab_data_data, mice, address, t_start, t_end, binlen
+            )
             data[address][0][phase] = visit_data[0]
             data[address][1][phase] = visit_data[1]
             visits_in_cages[address] = visit_data[2]
         if save_histogram:
-            make_visit_duration_histogram(visits_in_cages,
-                                          bin_labels[phase],
-                                          phase, mice,
-                                          histogram_fname, res_dir,
-                                          "other_variables/visit_histograms_binlen_%3.1f"
-                                          % (binlen/3600),
-                                          prefix, add_info_mice)
-            save_visit_duration(visits_in_cages,
-                                bin_labels[phase],
-                                phase, mice,
-                                histogram_fname, res_dir,
-                                "other_variables/visit_histograms_binlen_%3.1f"
-                                % (binlen/3600),
-                                prefix, add_info_mice)
+            make_visit_duration_histogram(
+                visits_in_cages,
+                bin_labels[phase],
+                phase,
+                mice,
+                histogram_fname,
+                res_dir,
+                "other_variables/visit_histograms_binlen_%3.1f" % (binlen / 3600),
+                prefix,
+                add_info_mice,
+            )
+            save_visit_duration(
+                visits_in_cages,
+                bin_labels[phase],
+                phase,
+                mice,
+                histogram_fname,
+                res_dir,
+                "other_variables/visit_histograms_binlen_%3.1f" % (binlen / 3600),
+                prefix,
+                add_info_mice,
+            )
 
-    save_data_cvs(data, phases, mice, bin_labels, fname, res_dir,
-                  ecohab_data.cages, headers)
-    save_data_cvs(data, phases, mice, bin_labels, fname, res_dir,
-                  ecohab_data.cages, headers, target_dir="social_approach")
+    save_data_cvs(
+        data, phases, mice, bin_labels, fname, res_dir, ecohab_data.cages, headers
+    )
+    save_data_cvs(
+        data,
+        phases,
+        mice,
+        bin_labels,
+        fname,
+        res_dir,
+        ecohab_data.cages,
+        headers,
+        target_dir="social_approach",
+    )
     return data

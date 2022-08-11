@@ -23,6 +23,7 @@ class SetupConfigMethods(RawConfigParser):
     used for calculating visits of animals to EcoHAB cages.
 
     """
+
     def __init__(self):
         RawConfigParser.__init__(self)
 
@@ -64,8 +65,7 @@ class SetupConfigMethods(RawConfigParser):
         Return an alphabetically sorted list of all the cages
         in the experimental setup.
         """
-        return sorted(filter(lambda x: "cage" in x,
-                      self.sections()))
+        return sorted(filter(lambda x: "cage" in x, self.sections()))
 
     @property
     def tunnels(self):
@@ -74,8 +74,7 @@ class SetupConfigMethods(RawConfigParser):
         in the experimental setup.
         """
 
-        return sorted(filter(lambda x: "tunnel" in x,
-                      self.sections()))
+        return sorted(filter(lambda x: "tunnel" in x, self.sections()))
 
     def get_cages_dict(self):
         """
@@ -223,8 +222,10 @@ class SetupConfigMethods(RawConfigParser):
                         continue
                     tunnel_antennas = self.same_tunnel[ant_4]
                     next_tunnel_antennas = self.next_tunnel_antennas(ant_4)
-                    if antenna not in tunnel_antennas\
-                       and antenna not in next_tunnel_antennas:
+                    if (
+                        antenna not in tunnel_antennas
+                        and antenna not in next_tunnel_antennas
+                    ):
                         out += tunnel_antennas
         return list(set(out))
 
@@ -243,8 +244,7 @@ class SetupConfigMethods(RawConfigParser):
             for ant_2 in other_tunnel_ants:
                 out_other_tunnel_ants += self._go_two_steps(ant_2)
             if len(out_this_antenna + out_other_tunnel_ants):
-                out[ant_1] = sorted(list(set(out_this_antenna +
-                                             out_other_tunnel_ants)))
+                out[ant_1] = sorted(list(set(out_this_antenna + out_other_tunnel_ants)))
         return out
 
     def get_cage_address_dict(self):
@@ -255,11 +255,13 @@ class SetupConfigMethods(RawConfigParser):
         out = {}
         for sec in self.cages:
             for antenna_type, antenna in self.items(sec):
-                if antenna_type.startswith("entrance")\
-                   or antenna_type.startswith("internal"):
+                if antenna_type.startswith("entrance") or antenna_type.startswith(
+                    "internal"
+                ):
                     if antenna in out:
-                        raise Exception("%s was specified as %s twice" %
-                                        (antenna_type, antenna))
+                        raise Exception(
+                            "%s was specified as %s twice" % (antenna_type, antenna)
+                        )
                     else:
                         out[antenna] = sec
         return out
@@ -307,10 +309,13 @@ class SetupConfigMethods(RawConfigParser):
         """
         out = []
         for tunnel in self.tunnels:
-            vals = [item[1] for item in self.items(tunnel)
-                    if item[0].startswith("entra")]
+            vals = [
+                item[1] for item in self.items(tunnel) if item[0].startswith("entra")
+            ]
             if len(vals) > 2:
-                raise Exception("There are more than 2 antennas at the entrances to %s" % tunnel)
+                raise Exception(
+                    "There are more than 2 antennas at the entrances to %s" % tunnel
+                )
             out += ["%s %s" % (vals[0], vals[1]), "%s %s" % (vals[1], vals[0])]
         return sorted(out)
 
@@ -334,7 +339,7 @@ class SetupConfigMethods(RawConfigParser):
         """
         pairs = []
         for i, a1 in enumerate(self.all_antennas):
-            for a2 in self.all_antennas[i+1:]:
+            for a2 in self.all_antennas[i + 1 :]:
                 pairs.append("%s %s" % (min(a1, a2), max(a1, a2)))
 
         unused = sorted(list(self.find_unused_antennas()))
@@ -352,9 +357,8 @@ class SetupConfigMethods(RawConfigParser):
                 continue
             values = [item[1] for item in self.items(sec)]
             for i, val in enumerate(values):
-                for val2 in values[i + 1:]:
-                    key = "%s %s" % (min(val, val2),
-                                     max(val, val2))
+                for val2 in values[i + 1 :]:
+                    key = "%s %s" % (min(val, val2), max(val, val2))
                     if key not in legal:
                         legal.append(key)
         for sec in self.tunnels:
@@ -367,8 +371,10 @@ class SetupConfigMethods(RawConfigParser):
                         for cage_val in values:
                             if cage_val == tunnel_val:
                                 continue
-                            key = "%s %s" % (min(cage_val, tunnel_val),
-                                             max(cage_val, tunnel_val))
+                            key = "%s %s" % (
+                                min(cage_val, tunnel_val),
+                                max(cage_val, tunnel_val),
+                            )
                             if key not in legal:
                                 legal.append(key)
         for l in legal:
@@ -440,8 +446,9 @@ class SetupConfigMethods(RawConfigParser):
         pairs = []
         for i, antenna1 in enumerate(self.all_antennas):
             for antenna2 in self.all_antennas[i:]:
-                pairs.append("%s %s" % (min(antenna1, antenna2),
-                                        max(antenna1, antenna2)))
+                pairs.append(
+                    "%s %s" % (min(antenna1, antenna2), max(antenna1, antenna2))
+                )
         return pairs
 
     @property
@@ -476,7 +483,7 @@ class SetupConfigMethods(RawConfigParser):
         allowed = self.allowed_pairs()
         skipped_one = self.skipped_one()
         skipped_two = self.skipped_two()
-        for pair in allowed+skipped_one+skipped_two:
+        for pair in allowed + skipped_one + skipped_two:
             pairs.remove(pair)
         return sorted(pairs)
 
@@ -485,10 +492,8 @@ class SetupConfigMethods(RawConfigParser):
         for key in self.tunnels_dict.keys():
             if len(self.tunnels_dict[key]) < 2:
                 continue
-            out.append("%s %s" % (self.tunnels_dict[key][0],
-                                  self.tunnels_dict[key][1]))
-            out.append("%s %s" % (self.tunnels_dict[key][1],
-                                  self.tunnels_dict[key][0]))
+            out.append("%s %s" % (self.tunnels_dict[key][0], self.tunnels_dict[key][1]))
+            out.append("%s %s" % (self.tunnels_dict[key][1], self.tunnels_dict[key][0]))
         return sorted(out)
 
     def cage_pairs(self):
@@ -498,7 +503,7 @@ class SetupConfigMethods(RawConfigParser):
             if len(antennas) < 2:
                 continue
             for i, a1 in enumerate(antennas):
-                for a2 in antennas[i+1:]:
+                for a2 in antennas[i + 1 :]:
                     out.append("%s %s" % (a1, a2))
                     out.append("%s %s" % (a2, a1))
         return sorted(out)
@@ -508,10 +513,8 @@ class SetupConfigMethods(RawConfigParser):
         for key in self.tunnels_dict.keys():
             if len(self.tunnels_dict[key]) < 2:
                 continue
-            out["%s %s" % (self.tunnels_dict[key][0],
-                           self.tunnels_dict[key][1])] = key
-            out["%s %s" % (self.tunnels_dict[key][1],
-                           self.tunnels_dict[key][0])] = key
+            out["%s %s" % (self.tunnels_dict[key][0], self.tunnels_dict[key][1])] = key
+            out["%s %s" % (self.tunnels_dict[key][1], self.tunnels_dict[key][0])] = key
         return out
 
     def cage_pair_dict(self):
@@ -521,7 +524,7 @@ class SetupConfigMethods(RawConfigParser):
             if len(antennas) < 2:
                 continue
             for i, a1 in enumerate(antennas):
-                for a2 in antennas[i+1:]:
+                for a2 in antennas[i + 1 :]:
                     out["%s %s" % (a1, a2)] = key
                     out["%s %s" % (a2, a1)] = key
         return out
@@ -555,6 +558,7 @@ class SetupConfig(SetupConfigMethods):
 
     SetupConfig is used by the Loader class.
     """
+
     ALL_ECOHAB_SETUP_ANTENNAS = ["1", "2", "3", "4", "5", "6", "7", "8"]
 
     def find_path(self, path, fname, standard, expected, possible):
@@ -582,8 +586,9 @@ class SetupConfig(SetupConfigMethods):
 
     def __init__(self, path=None, fname=None):
         SetupConfigMethods.__init__(self)
-        full_path = self.find_path(path, fname, "standard_setup.txt",
-                                   'setup.txt', "setup*.txt")
+        full_path = self.find_path(
+            path, fname, "standard_setup.txt", "setup.txt", "setup*.txt"
+        )
         print(full_path)
         self.read(full_path)
         self.make_definitions()
@@ -634,12 +639,15 @@ class IdentityConfig(RawConfigParser):
     and self.renames for renaming compartments that are parts of only
     one setup.
     """
+
     def __init__(self, path_to_fname):
         if os.path.isfile(path_to_fname):
             self.config_path = path_to_fname
         else:
-            raise Exception("Could not find experiment config file %s for modular experiments",
-                            path_to_fname)
+            raise Exception(
+                "Could not find experiment config file %s for modular experiments",
+                path_to_fname,
+            )
         RawConfigParser.__init__(self)
         self.read(path_to_fname)
 
@@ -652,11 +660,16 @@ class IdentityConfig(RawConfigParser):
             if not section.startswith("shared"):
                 continue
             items = [item[0] for item in self.items(section)]
-            setups = (len(items) - 1)//2
+            setups = (len(items) - 1) // 2
             if (len(items) - 1) % 2 != 0:
-                raise Exception("Wrong format of ExperimentSetup config section %" % section)
+                raise Exception(
+                    "Wrong format of ExperimentSetup config section %" % section
+                )
             if setups < 2:
-                raise Exception("Not enough setups defined in ExperimentSetup config section %" % section)
+                raise Exception(
+                    "Not enough setups defined in ExperimentSetup config section %"
+                    % section
+                )
 
             for i in range(1, setups + 1):
                 setup = self.get(section, field % i)
@@ -673,7 +686,9 @@ class IdentityConfig(RawConfigParser):
                 continue
             items = [item[0] for item in self.items(section)]
             if len(items) != 3:
-                raise Exception("A rename compartment should have 3 attributes: setup_name, compartment_name and destination name")
+                raise Exception(
+                    "A rename compartment should have 3 attributes: setup_name, compartment_name and destination name"
+                )
             setup = self.get(section, "setup_name")
             compartment = self.get(section, "compartment_name")
             key = "%s %s" % (setup, compartment)
@@ -731,7 +746,9 @@ class ExperimentSetupConfig(SetupConfigMethods):
         elif isinstance(fname_with_path, str):
             experiment_config = IdentityConfig(fname_with_path)
         else:
-            raise Exception("Provide a path to experiment config file or an IdentityConfig object")
+            raise Exception(
+                "Provide a path to experiment config file or an IdentityConfig object"
+            )
         self.identity_compartments = experiment_config.identity_compartments
         self.renames = experiment_config.renames
         self.make_sections(single_configs)
@@ -762,20 +779,22 @@ class ExperimentSetupConfig(SetupConfigMethods):
                     self.add_section(new_sec_name)
                     section_items = []
                 except DuplicateSectionError:
-                    section_items = [item[0] for item in
-                                     self.items(new_sec_name)]
+                    section_items = [item[0] for item in self.items(new_sec_name)]
 
                 for antenna_type, value in this_config.items(section):
                     new_value = "%s_%s" % (value, key)
                     if antenna_type in section_items:
                         starts_with = antenna_type.split("_")[0]
-                        how_many = len([item for item in section_items
-                                        if item.startswith(starts_with)])
-                        new_antenna_type = "%s_antenna%d" % (starts_with,
-                                                             how_many + 1)
+                        how_many = len(
+                            [
+                                item
+                                for item in section_items
+                                if item.startswith(starts_with)
+                            ]
+                        )
+                        new_antenna_type = "%s_antenna%d" % (starts_with, how_many + 1)
                     else:
                         new_antenna_type = antenna_type
 
                     self.set(new_sec_name, new_antenna_type, new_value)
-                    section_items = [item[0] for item
-                                     in self.items(new_sec_name)]
+                    section_items = [item[0] for item in self.items(new_sec_name)]

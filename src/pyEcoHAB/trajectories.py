@@ -15,17 +15,17 @@ directory = "antenna_transitions"
 def single_mouse_antenna_transitions(antennas1, times1):
     out = {}
     for i, a1 in enumerate(antennas1[:-1]):
-        a2 = antennas1[i+1]
+        a2 = antennas1[i + 1]
         key = "%s %s" % (a1, a2)
         if key not in out:
             out[key] = []
-        out[key].append(times1[i+1]-times1[i])
+        out[key].append(times1[i + 1] - times1[i])
     return out
 
 
-def antenna_transtions_in_phases(data, phase_bounds, phases,
-                                 data_keys, setup_config,
-                                 res_dir, prefix, delimiter):
+def antenna_transtions_in_phases(
+    data, phase_bounds, phases, data_keys, setup_config, res_dir, prefix, delimiter
+):
     transition_times = {}
     all_phases, bin_labels = data_keys
     for idx_phase, ph in enumerate(all_phases):
@@ -42,25 +42,51 @@ def antenna_transtions_in_phases(data, phase_bounds, phases,
                 out = single_mouse_antenna_transitions(antennas, times)
                 for key in out:
                     transition_times[ph][lab][key].extend(out[key])
-    save_antenna_transitions(transition_times,
-                             "transition_durations",
-                             res_dir, prefix, directory, delimiter=delimiter)
-    histograms_antenna_transitions(transition_times, setup_config,
-                                   res_dir, directory,
-                                   "transition_times_antennas", prefix)
-    cages_tunnels = get_cage_tunnel_transitions(transition_times,
-                                                setup_config)
-    save_antenna_transitions(cages_tunnels, "transition_durations",
-                             res_dir, prefix, directory, delimiter=delimiter)
-    histograms_antenna_transitions(cages_tunnels, setup_config,
-                                   res_dir, directory,
-                                   "transitions_all", prefix)
+    save_antenna_transitions(
+        transition_times,
+        "transition_durations",
+        res_dir,
+        prefix,
+        directory,
+        delimiter=delimiter,
+    )
+    histograms_antenna_transitions(
+        transition_times,
+        setup_config,
+        res_dir,
+        directory,
+        "transition_times_antennas",
+        prefix,
+    )
+    cages_tunnels = get_cage_tunnel_transitions(transition_times, setup_config)
+    save_antenna_transitions(
+        cages_tunnels,
+        "transition_durations",
+        res_dir,
+        prefix,
+        directory,
+        delimiter=delimiter,
+    )
+    histograms_antenna_transitions(
+        cages_tunnels, setup_config, res_dir, directory, "transitions_all", prefix
+    )
     light_dark = get_light_dark_transitions(transition_times)
-    save_antenna_transitions(light_dark, "transition_durations",
-                             res_dir, prefix, directory, delimiter=delimiter)
-    histograms_antenna_transitions(light_dark, setup_config,
-                                   res_dir, directory,
-                                   "transition_times_antennas", prefix)
+    save_antenna_transitions(
+        light_dark,
+        "transition_durations",
+        res_dir,
+        prefix,
+        directory,
+        delimiter=delimiter,
+    )
+    histograms_antenna_transitions(
+        light_dark,
+        setup_config,
+        res_dir,
+        directory,
+        "transition_times_antennas",
+        prefix,
+    )
     return transition_times
 
 
@@ -112,9 +138,15 @@ def get_cage_tunnel_transitions(t_dict, setup_config):
     return out
 
 
-def get_antenna_transition_durations(ecohab_data, timeline, binsize=12*3600,
-                                     res_dir="", prefix="", remove_mouse="",
-                                     delimiter=";"):
+def get_antenna_transition_durations(
+    ecohab_data,
+    timeline,
+    binsize=12 * 3600,
+    res_dir="",
+    prefix="",
+    remove_mouse="",
+    delimiter=";",
+):
     """Save and plot histograms of durations between consecutive tag
     registrations by antenna pairs.
 
@@ -154,14 +186,19 @@ def get_antenna_transition_durations(ecohab_data, timeline, binsize=12*3600,
         res_dir = ecohab_data.res_dir
     mice = utils.get_mice(ecohab_data.mice, remove_mouse)
     function = utils.get_times_antennas_list_of_mice
-    phases, times, data, keys = utils.get_registrations_bins(ecohab_data,
-                                                             timeline,
-                                                             binsize,
-                                                             mice,
-                                                             function)
-    transitions = antenna_transtions_in_phases(data, times, phases,
-                                               keys, ecohab_data.setup_config,
-                                               res_dir, prefix, delimiter=";")
+    phases, times, data, keys = utils.get_registrations_bins(
+        ecohab_data, timeline, binsize, mice, function
+    )
+    transitions = antenna_transtions_in_phases(
+        data,
+        times,
+        phases,
+        keys,
+        ecohab_data.setup_config,
+        res_dir,
+        prefix,
+        delimiter=";",
+    )
     return transitions
 
 
@@ -192,27 +229,46 @@ def get_registration_trains(ecohab_data):
                     counts_in_trains["ALL"][0][prev_antenna].append(count)
                 count = 1
                 prev_antenna = a
-                previous_t_start = times[i+1]
+                previous_t_start = times[i + 1]
 
-    histograms_registration_trains(registration_trains["ALL"][0],
-                                   ecohab_data.setup_config,
-                                   fname_dur, ecohab_data.res_dir,
-                                   directory, title=title,
-                                   xlabel="Duration (s)")
-    histograms_registration_trains(counts_in_trains["ALL"][0],
-                                   ecohab_data.setup_config,
-                                   fname_count, ecohab_data.res_dir, directory,
-                                   title=title,
-                                   xlabel="#registrations")
-    save_antenna_transitions(registration_trains, "transition_durations_ALL.csv",
-                             ecohab_data.res_dir, ecohab_data.prefix, directory)
-    save_antenna_transitions(counts_in_trains,  "counts_in_trains_ALL.csv",
-                             ecohab_data.res_dir, ecohab_data.prefix, directory)
+    histograms_registration_trains(
+        registration_trains["ALL"][0],
+        ecohab_data.setup_config,
+        fname_dur,
+        ecohab_data.res_dir,
+        directory,
+        title=title,
+        xlabel="Duration (s)",
+    )
+    histograms_registration_trains(
+        counts_in_trains["ALL"][0],
+        ecohab_data.setup_config,
+        fname_count,
+        ecohab_data.res_dir,
+        directory,
+        title=title,
+        xlabel="#registrations",
+    )
+    save_antenna_transitions(
+        registration_trains,
+        "transition_durations_ALL.csv",
+        ecohab_data.res_dir,
+        ecohab_data.prefix,
+        directory,
+    )
+    save_antenna_transitions(
+        counts_in_trains,
+        "counts_in_trains_ALL.csv",
+        ecohab_data.res_dir,
+        ecohab_data.prefix,
+        directory,
+    )
     return registration_trains, counts_in_trains
 
 
-def histograms_registration_trains(data_dict, config, fname, res_dir,
-                                   directory, title, xlabel=""):
+def histograms_registration_trains(
+    data_dict, config, fname, res_dir, directory, title, xlabel=""
+):
     titles = {}
     fnames = {}
     xmin = 1000
@@ -226,8 +282,7 @@ def histograms_registration_trains(data_dict, config, fname, res_dir,
         titles[key] = "%s %s" % (title, key)
         fnames[key] = "%s_%s" % (fname, key)
         hist, bins = np.histogram(data_dict[key], nbins)
-        logbins = np.logspace(np.log10(bins[0]), np.log10(bins[-1]),
-                              len(bins))
+        logbins = np.logspace(np.log10(bins[0]), np.log10(bins[-1]), len(bins))
         hist, bins = np.histogram(data_dict[key], bins=logbins)
         if max(hist) > max_count:
             max_count = max(hist) + 1
@@ -239,10 +294,20 @@ def histograms_registration_trains(data_dict, config, fname, res_dir,
     for key in data_dict.keys():
         if not len(data_dict[key]):
             continue
-        single_histogram_figures(data_dict[key], fnames[key],
-                                 res_dir, directory, titles[key],
-                                 nbins=nbins, xlogscale=xlogscale,
-                                 xlabel=xlabel,
-                                 ylabel="count", xmin=xmin, xmax=xmax,
-                                 ymin=0, ymax=max_count,
-                                 fontsize=14, median_mean=True)
+        single_histogram_figures(
+            data_dict[key],
+            fnames[key],
+            res_dir,
+            directory,
+            titles[key],
+            nbins=nbins,
+            xlogscale=xlogscale,
+            xlabel=xlabel,
+            ylabel="count",
+            xmin=xmin,
+            xmax=xmax,
+            ymin=0,
+            ymax=max_count,
+            fontsize=14,
+            median_mean=True,
+        )

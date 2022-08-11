@@ -64,19 +64,20 @@ class EcoHabDataBase(object):
         """
         tempdata = []
         for mouse in self.mice:
-            times, antennas = utils.get_times_antennas(self.registrations,
-                                                       mouse,
-                                                       0, -1)
-            out = utils.get_animal_position(times, antennas,
-                                            mouse,
-                                            self.threshold,
-                                            setup_config.same_tunnel,
-                                            setup_config.same_address,
-                                            setup_config.opposite_tunnel,
-                                            setup_config.address,
-                                            setup_config.address_surrounding,
-                                            setup_config.address_non_adjacent,
-                                            setup_config.internal_antennas)
+            times, antennas = utils.get_times_antennas(self.registrations, mouse, 0, -1)
+            out = utils.get_animal_position(
+                times,
+                antennas,
+                mouse,
+                self.threshold,
+                setup_config.same_tunnel,
+                setup_config.same_address,
+                setup_config.opposite_tunnel,
+                setup_config.address,
+                setup_config.address_surrounding,
+                setup_config.address_non_adjacent,
+                setup_config.internal_antennas,
+            )
             tempdata.extend(out)
         tempdata.sort(key=lambda x: x[2])
         return tempdata
@@ -119,39 +120,26 @@ class EcoHabDataBase(object):
         self.visits.unmask_data()
 
     def get_antennas(self, mice):
-        return self.registrations.getproperty(mice,
-                                         'Antenna')
+        return self.registrations.getproperty(mice, "Antenna")
 
     def get_times(self, mice):
-        return self.registrations.getproperty(mice,
-                                         'Time',
-                                         'float')
+        return self.registrations.getproperty(mice, "Time", "float")
 
     def get_durations(self, mice):
-        """Return duration of registration by antenna for specified animals.
-        """
-        return self.registrations.getproperty(mice,
-                                         'Duration',
-                                         'float')
+        """Return duration of registration by antenna for specified animals."""
+        return self.registrations.getproperty(mice, "Duration", "float")
 
     def get_visit_addresses(self, mice):
-        return self.visits.getproperty(mice,
-                                       'Address')
+        return self.visits.getproperty(mice, "Address")
 
     def get_starttimes(self, mice):
-        return self.visits.getproperty(mice,
-                                       'AbsStartTimecode',
-                                       'float')
+        return self.visits.getproperty(mice, "AbsStartTimecode", "float")
 
     def get_endtimes(self, mice):
-        return self.visits.getproperty(mice,
-                                       'AbsEndTimecode',
-                                       'float')
+        return self.visits.getproperty(mice, "AbsEndTimecode", "float")
 
     def get_visit_durations(self, mice):
-        return self.visits.getproperty(mice,
-                                       'VisitDuration',
-                                       'float')
+        return self.visits.getproperty(mice, "VisitDuration", "float")
 
     def how_many_antennas(self):
         all_antennas = set(self.get_antennas(self.mice))
@@ -201,16 +189,18 @@ class EcoHabDataBase(object):
             durations = self.get_visit_durations(mouse)
             for i, a in enumerate(addresses):
                 if a in cage:
-                    visit = ufl.NamedDict("Visit_%s_%d" % (mouse, i),
-                                          mouse=mouse, address=a,
-                                          t_start=start_times[i],
-                                          t_end=end_times[i],
-                                          duration=durations[i])
+                    visit = ufl.NamedDict(
+                        "Visit_%s_%d" % (mouse, i),
+                        mouse=mouse,
+                        address=a,
+                        t_start=start_times[i],
+                        t_end=end_times[i],
+                        duration=durations[i],
+                    )
                     out.append(visit)
         return sorted(out, key=lambda o: o["t_start"])
 
-    def get_registration_stats(self, mouse, t_start,
-                               t_end, antenna, binsize):
+    def get_registration_stats(self, mouse, t_start, t_end, antenna, binsize):
         """Count number and combined durations of registrations of a mouse tag
         by a specified antenna in bins of size binsize for tags
         registered in a time interval (t_start, t_end).
@@ -246,7 +236,7 @@ class EcoHabDataBase(object):
             sum_time = 0
             for ind in indices:
                 sum_time += durations[ind]
-            durations_in_bins.append(sum_time/1000)
+            durations_in_bins.append(sum_time / 1000)
             self.unmask_data()
             t_s = t_e
         return count_in_bins, durations_in_bins
@@ -313,13 +303,14 @@ class Loader(EcoHabDataBase):
            Add analysis date to results directory filename.
            As a default current date will be added.
     """
-    MAX_BREAK = 3*3600
+
+    MAX_BREAK = 3 * 3600
     internal_antennas = []
 
     def __init__(self, path, **kwargs):
         # Read in parameters
         self.path = path
-        setup_config = kwargs.pop('setup_config', None)
+        setup_config = kwargs.pop("setup_config", None)
         if isinstance(setup_config, SetupConfig):
             antennas = setup_config
         elif isinstance(setup_config, str):
@@ -327,15 +318,15 @@ class Loader(EcoHabDataBase):
         else:
             antennas = SetupConfig(path=self.path)
 
-        self.mask = kwargs.pop('mask', None)
-        self.visit_threshold = kwargs.pop('visit_threshold', 2.)
-        add_date = kwargs.pop('add_date', True)
+        self.mask = kwargs.pop("mask", None)
+        self.visit_threshold = kwargs.pop("visit_threshold", 2.0)
+        add_date = kwargs.pop("add_date", True)
         res_dir = kwargs.pop("res_dir", "Results")
         self.prefix = kwargs.pop("prefix", ufl.make_prefix(self.path))
         self.max_break = kwargs.pop("max_break", self.MAX_BREAK)
 
-        remove_antennas = kwargs.pop('remove_antennas', [])
-        tags = kwargs.pop('legal_tags', "ALL")
+        remove_antennas = kwargs.pop("remove_antennas", [])
+        tags = kwargs.pop("legal_tags", "ALL")
         if add_date:
             today = date.today().strftime("%d.%m.%y")
             res_dir = "%s_%s" % (res_dir, today)
@@ -345,10 +336,8 @@ class Loader(EcoHabDataBase):
         data = ufl.from_raw_data(rawdata)
         data = ufl.remove_antennas(data, remove_antennas)
         # As in antenna registrations
-        ufl.run_diagnostics(data, self.max_break, self.res_dir,
-                            antennas)
-        super(Loader, self).__init__(data, self.mask,
-                                     self.visit_threshold, antennas)
+        ufl.run_diagnostics(data, self.max_break, self.res_dir, antennas)
+        super(Loader, self).__init__(data, self.mask, self.visit_threshold, antennas)
         self.cages = antennas.cages
         self.directions = antennas.directions
         self.setup_config = antennas
@@ -369,16 +358,17 @@ class Loader(EcoHabDataBase):
             raise Exception("empty directory %s" % self.path)
         for f_name in self._fnames:
             raw_data += ufl.read_single_file(self.path, f_name)
-            days.add(f_name.split('_')[0])
-        data = ufl.remove_ghost_tags(raw_data,
-                                     legal_tags=tags)
+            days.add(f_name.split("_")[0])
+        data = ufl.remove_ghost_tags(raw_data, legal_tags=tags)
         data.sort(key=lambda x: ufl.time_to_sec(x[1]))
         return data
 
     def __repr__(self):
         """Nice string representation for printing this class."""
-        mystring = 'Eco-HAB data loaded from:\n%s\nin the folder%s\n' % (
-                   self._fnames.__str__(), self.path)
+        mystring = "Eco-HAB data loaded from:\n%s\nin the folder%s\n" % (
+            self._fnames.__str__(),
+            self.path,
+        )
         return mystring
 
 
@@ -428,6 +418,7 @@ class Merger(EcoHabDataBase):
     loaders:
         Eco-HAB datasets
     """
+
     def __init__(self, experiment_config, res_dir, *loaders, prefix=None):
         datasets = []
         configs = {}
@@ -435,8 +426,7 @@ class Merger(EcoHabDataBase):
         for loader in loaders:
             setup_name = loader.setup_name
             configs[setup_name] = loader.setup_config
-            datasets.append(ufl.rename_antennas(setup_name,
-                                                loader.registrations.data))
+            datasets.append(ufl.rename_antennas(setup_name, loader.registrations.data))
             max_breaks.append(loader.max_break)
 
         data = ufl.append_data_sources(datasets)
@@ -449,13 +439,11 @@ class Merger(EcoHabDataBase):
         today = date.today().strftime("%d.%m.%y")
         self.res_dir = "%s_%s" % (res_dir, today)
         antennas = ExperimentSetupConfig(experiment_config, **configs)
-        super(Merger, self).__init__(data, mask,
-                                     self.visit_threshold, antennas)
+        super(Merger, self).__init__(data, mask, self.visit_threshold, antennas)
         self.cages = antennas.cages
         self.directions = antennas.directions
         self.setup_config = antennas
         self.all_antennas = antennas.all_antennas
         self.internal_antennas = antennas.internal_antennas
         self.max_break = max(max_breaks)
-        ufl.run_diagnostics(data, self.max_break, self.res_dir,
-                            antennas)
+        ufl.run_diagnostics(data, self.max_break, self.res_dir, antennas)

@@ -15,9 +15,9 @@ def mice_in_different_spots(states1, states2):
 
 
 def does_mouse1_push_out(m1_states, m1_times, antennas2, times2, config):
-    m2_states, m2_readouts = utils.get_states_and_readouts(antennas2, times2,
-                                                           m1_times[0],
-                                                           m1_times[-1])
+    m2_states, m2_readouts = utils.get_states_and_readouts(
+        antennas2, times2, m1_times[0], m1_times[-1]
+    )
     between = utils.get_idx_between(m1_times[0], m1_times[-1], times2)
 
     if len(between) == 0:
@@ -63,15 +63,16 @@ def does_mouse1_push_out(m1_states, m1_times, antennas2, times2, config):
     return False
 
 
-def check_mouse1_pushing(antennas1, times1, antennas2, times2,
-                         config, normalization=None):
+def check_mouse1_pushing(
+    antennas1, times1, antennas2, times2, config, normalization=None
+):
     if len(antennas1) < 2:
         return False
     idx = 1
     dominance_counter = 0
     while idx < len(antennas1):
-        a1, a2 = antennas1[idx-1:idx+1]
-        t1, t2 = times1[idx-1:idx+1]
+        a1, a2 = antennas1[idx - 1 : idx + 1]
+        t1, t2 = times1[idx - 1 : idx + 1]
         if a1 != a2 and a1 in config.same_tunnel and a2 in config.same_tunnel:
             if config.same_tunnel[a1] == config.same_tunnel[a2]:
                 temp_ants = [a1, a2]
@@ -85,23 +86,20 @@ def check_mouse1_pushing(antennas1, times1, antennas2, times2,
                     temp_ants.append(a3)
                     temp_times.append(t3)
                     idx = idx + 1
-                if idx == len(antennas1) or\
-                   config.address[a1] != config.address[a3]:
-                    dominance_counter += does_mouse1_push_out(temp_ants,
-                                                              temp_times,
-                                                              antennas2,
-                                                              times2,
-                                                              config)
+                if idx == len(antennas1) or config.address[a1] != config.address[a3]:
+                    dominance_counter += does_mouse1_push_out(
+                        temp_ants, temp_times, antennas2, times2, config
+                    )
         idx = idx + 1
 
     if normalization is None:
         return dominance_counter
     if normalization == "m1_activity":
-        return dominance_counter/len(antennas1)
+        return dominance_counter / len(antennas1)
     if normalization == "m2_activity":
-        return dominance_counter/len(antennas2)
+        return dominance_counter / len(antennas2)
     if normalization == "m1_m2_activity":
-        return dominance_counter/len(antennas2)/len(antennas1)
+        return dominance_counter / len(antennas2) / len(antennas1)
 
 
 def tube_dominance_single_phase(ecohab_data, timeline, phase, normalization):
@@ -110,30 +108,33 @@ def tube_dominance_single_phase(ecohab_data, timeline, phase, normalization):
     dominance = np.zeros((len(mice), len(mice)))
     setup_config = ecohab_data.setup_config
     for i, mouse1 in enumerate(mice):
-        m1_times, m1_antennas = utils.get_times_antennas(ecohab_data, mouse1,
-                                                         t_start, t_end)
+        m1_times, m1_antennas = utils.get_times_antennas(
+            ecohab_data, mouse1, t_start, t_end
+        )
         for j, mouse2 in enumerate(mice):
             if i != j:
-                m2_times, m2_antennas = utils.get_times_antennas(ecohab_data,
-                                                                 mouse2,
-                                                                 t_start,
-                                                                 t_end)
+                m2_times, m2_antennas = utils.get_times_antennas(
+                    ecohab_data, mouse2, t_start, t_end
+                )
 
-                dominance[i, j] = check_mouse1_pushing(m1_antennas,
-                                                       m1_times,
-                                                       m2_antennas,
-                                                       m2_times,
-                                                       setup_config,
-                                                       normalization)
+                dominance[i, j] = check_mouse1_pushing(
+                    m1_antennas,
+                    m1_times,
+                    m2_antennas,
+                    m2_times,
+                    setup_config,
+                    normalization,
+                )
     return dominance
 
 
-def get_tube_dominance(ecohab_data, timeline, prefix="", res_dir="",
-                       normalization=None, delimiter=";"):
+def get_tube_dominance(
+    ecohab_data, timeline, prefix="", res_dir="", normalization=None, delimiter=";"
+):
     if normalization is None:
-        fname = 'tube_dominance_no_normalization'
+        fname = "tube_dominance_no_normalization"
     else:
-        fname = 'tube_dominance_%s' % normalization
+        fname = "tube_dominance_%s" % normalization
     if prefix == "":
         prefix = ecohab_data.prefix
     if res_dir == "":
@@ -142,12 +143,19 @@ def get_tube_dominance(ecohab_data, timeline, prefix="", res_dir="",
     if len(ecohab_data.setup_config.tunnels) == 1:
         dom2.get_tube_dominance_2_cages(ecohab_data, timeline, res_dir, prefix)
         dom2.get_subversion_evaluation(ecohab_data, timeline, res_dir, prefix)
-        dom2.get_visits_to_stimulus_cage(ecohab_data, timeline, res_dir,
-                                         prefix)
-    dispatch.evaluate_whole_experiment(ecohab_data, timeline, res_dir, prefix,
-                                       tube_dominance_single_phase,
-                                       fname, 'dominating mouse',
-                                       'pushed out mouse',
-                                       '# dominances',
-                                       args=[normalization], vmin=0, vmax=25,
-                                       delimiter=delimiter)
+        dom2.get_visits_to_stimulus_cage(ecohab_data, timeline, res_dir, prefix)
+    dispatch.evaluate_whole_experiment(
+        ecohab_data,
+        timeline,
+        res_dir,
+        prefix,
+        tube_dominance_single_phase,
+        fname,
+        "dominating mouse",
+        "pushed out mouse",
+        "# dominances",
+        args=[normalization],
+        vmin=0,
+        vmax=25,
+        delimiter=delimiter,
+    )
