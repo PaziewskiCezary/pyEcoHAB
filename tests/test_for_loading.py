@@ -20,7 +20,7 @@ SAME_PIPE = {
     "5": ["5", "6"],
     "6": ["5", "6"],
     "7": ["7", "8"],
-    "8": ["7", "8"]
+    "8": ["7", "8"],
 }
 SAME_ADDRESS = {
     "1": ["1", "8"],
@@ -41,7 +41,7 @@ OPPOSITE_PIPE = {
     "5": ["1", "2"],
     "6": ["1", "2"],
     "7": ["3", "4"],
-    "8": ["3", "4"]
+    "8": ["3", "4"],
 }
 
 ADDRESS = {
@@ -101,7 +101,7 @@ class TestParseFilename(unittest.TestCase):
 class TestPrintHumanTime(unittest.TestCase):
     def test_date(self):
         tt = 1554247067
-        self.assertEqual('Tue Apr  2 23:17:47 2019', uf.print_human_time(tt))
+        self.assertEqual("Tue Apr  2 23:17:47 2019", uf.print_human_time(tt))
 
 
 class TestTimeToSec(unittest.TestCase):
@@ -111,7 +111,7 @@ class TestTimeToSec(unittest.TestCase):
 
     def test_sec_2(self):
         string = "20190709 20:05:13"
-        self.assertEqual(1562702713., uf.time_to_sec(string))
+        self.assertEqual(1562702713.0, uf.time_to_sec(string))
 
     def test_sec_raise_1(self):
         string = "2019070920:05:13"
@@ -132,29 +132,21 @@ class TestReformatDateTime(unittest.TestCase):
 
 class TestProcessProcessLineMore(unittest.TestCase):
     def test_1(self):
-        line = ["6406",	"2018.07.27", "16:00:29.329",
-                "7", "797", "0065-0161980646"]
-        out = ["6406", "20180727 16:00:29.329",
-               "7", "797", "0065-0161980646"]
-        self.assertEqual(uf.process_line_more_elements(line),
-                         out)
+        line = ["6406", "2018.07.27", "16:00:29.329", "7", "797", "0065-0161980646"]
+        out = ["6406", "20180727 16:00:29.329", "7", "797", "0065-0161980646"]
+        self.assertEqual(uf.process_line_more_elements(line), out)
 
     def test_2(self):
-        line = ["6406",	"2018.07.27", "16:00:29.329",
-                "7", "0065-0161980646"]
-        out = ["6406", "20180727 16:00:29.329",
-               "7", "0065-0161980646"]
-        self.assertEqual(uf.process_line_more_elements(line),
-                         out)
+        line = ["6406", "2018.07.27", "16:00:29.329", "7", "0065-0161980646"]
+        out = ["6406", "20180727 16:00:29.329", "7", "0065-0161980646"]
+        self.assertEqual(uf.process_line_more_elements(line), out)
 
 
 class TestProcessLine5(unittest.TestCase):
     def test1(self):
-        line = ["6406",	"16:00:29.329",
-                "7", "0065-0161980646"]
+        line = ["6406", "16:00:29.329", "7", "0065-0161980646"]
         date = "20180727"
-        out = ["6406", "20180727 16:00:29.329",
-               "7", "0065-0161980646"]
+        out = ["6406", "20180727 16:00:29.329", "7", "0065-0161980646"]
         self.assertEqual(uf.process_line_5_elements(line, date), out)
 
 
@@ -176,8 +168,7 @@ class TestReadInSingleFile(unittest.TestCase):
         self.assertEqual(mice, set(["mouse_1"]))
 
     def test_last_line(self):
-        last_line = ["15894", "20101010 11:59:56.218", "4",
-                     "307", "mouse_1"]
+        last_line = ["15894", "20101010 11:59:56.218", "4", "307", "mouse_1"]
         self.assertEqual(last_line, self.out[-1])
 
 
@@ -255,11 +246,11 @@ class TestRemoveAntennas(unittest.TestCase):
 
     def test_remove_antenna_list_1(self):
         data = uf.remove_antennas(self.data, ["1", "9"])
-        self.assertEqual(data.shape[0], self.data.shape[0]-3)
+        self.assertEqual(data.shape[0], self.data.shape[0] - 3)
 
     def test_remove_antenna_list_1(self):
         data = uf.remove_antennas(self.data, ["1", None])
-        self.assertEqual(data.shape[0], self.data.shape[0]-3)
+        self.assertEqual(data.shape[0], self.data.shape[0] - 3)
 
     def test_remove_antenna_list_2_1(self):
         data = uf.remove_antennas(self.data, ["1", "2"])
@@ -268,8 +259,7 @@ class TestRemoveAntennas(unittest.TestCase):
     def test_remove_antenna_list_3(self):
         data = uf.remove_antennas(self.data, ["1", "2"])
         mice = set(data["Tag"])
-        self.assertEqual(mice,
-                         set(["mouse_1", "mouse_2"]))
+        self.assertEqual(mice, set(["mouse_1", "mouse_2"]))
 
 
 class TestTransformRaw(unittest.TestCase):
@@ -278,10 +268,10 @@ class TestTransformRaw(unittest.TestCase):
         self.assertRaises(ValueError, uf.transform_raw, row)
 
     def test_correct(self):
-        row = [1, "20101010 11:00:49.020", 5, '102', 'mouse_3']
+        row = [1, "20101010 11:00:49.020", 5, "102", "mouse_3"]
         time = uf.time_to_sec(row[1])
         out = uf.transform_raw(row)
-        out2 = (1, time,  5, 102, "mouse_3")
+        out2 = (1, time, 5, 102, "mouse_3")
         self.assertEqual(out, out2)
 
 
@@ -360,7 +350,7 @@ class TestCheckAntennaPresence(unittest.TestCase):
         raw_data = uf.read_single_file(path, "20101010_110000.txt")
         data = uf.from_raw_data(raw_data)
         cls.config = SetupConfig()
-        cls.presences = uf.check_antenna_presence(data, cls.config, 24*3600)
+        cls.presences = uf.check_antenna_presence(data, cls.config, 24 * 3600)
         cls.end = data["Time"][-1]
         cls.begs = []
         for key in cls.presences.keys():
@@ -390,8 +380,7 @@ class TestCheckAntennaPresence(unittest.TestCase):
         self.assertEqual(len(set(self.begs)), len(self.begs))
 
     def test_empty(self):
-        self.assertRaises(Exception, uf.check_antenna_presence, [],
-                          self.config, 2)
+        self.assertRaises(Exception, uf.check_antenna_presence, [], self.config, 2)
 
 
 class TestTotalMismatches(unittest.TestCase):
@@ -427,9 +416,9 @@ class TestTotalMismatches(unittest.TestCase):
         for mouse in mice:
             idxs = np.where(self.data1["Tag"] == mouse)[0]
             for i, idx in enumerate(idxs[:-1]):
-                idx_next = idxs[i+1]
+                idx_next = idxs[i + 1]
                 a1, a2 = all_antennas[idx], all_antennas[idx_next]
-                key = "%s %s" % (min(a1, a2),  max(a1, a2))
+                key = "%s %s" % (min(a1, a2), max(a1, a2))
                 if key in self.mismatched_pairs:
                     correct[a1] += 1
                     correct[a2] += 1
@@ -444,43 +433,42 @@ class TestRunDiagnostics(unittest.TestCase):
         raw_data = uf.read_single_file(path, "20101010_110000.txt")
         data = uf.from_raw_data(raw_data)
         cls.mismatch1 = uf.antenna_mismatch(data, config)
-        cls.presences1 = uf.check_antenna_presence(data, config, 24*3600)
+        cls.presences1 = uf.check_antenna_presence(data, config, 24 * 3600)
         res_path = os.path.join(path, "Results")
         files = glob.glob(os.path.join(res_path + "/diagnostics/*.csv"))
         for f in files:
             print("rm ", f)
         cls.length = len(data["Antenna"])
-        out1 = uf.run_diagnostics(data, 24*3600, res_path, config)
+        out1 = uf.run_diagnostics(data, 24 * 3600, res_path, config)
         cls.str11, cls.str12, cls.str13, cls.str14, cls.str15 = out1
         path = os.path.join(data_path, "weird_short")
         raw_data = uf.read_single_file(path, "20101010_110000.txt")
         data = uf.from_raw_data(raw_data)
         cls.mismatch2 = uf.antenna_mismatch(data, config)
-        cls.presences2 = uf.check_antenna_presence(data, config, 24*3600)
+        cls.presences2 = uf.check_antenna_presence(data, config, 24 * 3600)
         res_path = os.path.join(path, "Results")
         files = glob.glob(os.path.join(res_path + "/diagnostics/*.csv"))
         for f in files:
             os.remove(f)
 
-        out2 = uf.run_diagnostics(data, 24*3600, res_path, config)
+        out2 = uf.run_diagnostics(data, 24 * 3600, res_path, config)
         cls.str21, cls.str22, cls.str23, cls.str24, cls.str25 = out2
         path1 = os.path.join(data_path, "weird_very_short_3_mice")
         raw_data1 = uf.read_single_file(path1, "20101010_110000.txt")
         data1 = uf.from_raw_data(raw_data1)
         config1 = SetupConfig()
         res_path1 = os.path.join(path1, "Results")
-        out = uf.run_diagnostics(data1, 24*3600, res_path1, config1)
+        out = uf.run_diagnostics(data1, 24 * 3600, res_path1, config1)
         cls.incorr_tunnel = out[-1]
 
     def test_mismatched_tunnels(self):
-        expected = u"tunnel, count, percentage of all passings through the tunnel\n1 2, 0, 0.00 per 100\n3 4, 0, 0.00 per 100\n5 6, 2, 29.00 per 100\n7 8, 0, 0.00 per 100\n"
+        expected = "tunnel, count, percentage of all passings through the tunnel\n1 2, 0, 0.00 per 100\n3 4, 0, 0.00 per 100\n5 6, 2, 29.00 per 100\n7 8, 0, 0.00 per 100\n"
         self.assertEqual(self.incorr_tunnel, expected)
 
     def test_no_registration_breaks_file(self):
         path = os.path.join(data_path, "weird_short")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/breaks_in_registrations.csv")
+        f_path = os.path.join(res_path + "/diagnostics/breaks_in_registrations.csv")
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str22)
@@ -488,8 +476,7 @@ class TestRunDiagnostics(unittest.TestCase):
     def test_no_mismatch_antennas_file(self):
         path = os.path.join(data_path, "weird_short")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/antenna_mismatches.csv")
+        f_path = os.path.join(res_path + "/diagnostics/antenna_mismatches.csv")
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str21)
@@ -497,8 +484,9 @@ class TestRunDiagnostics(unittest.TestCase):
     def test_total_no_mismatch_antennas_file(self):
         path = os.path.join(data_path, "weird_short")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/incorrect_antenna_transitions.csv")
+        f_path = os.path.join(
+            res_path + "/diagnostics/incorrect_antenna_transitions.csv"
+        )
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str23)
@@ -506,8 +494,7 @@ class TestRunDiagnostics(unittest.TestCase):
     def test_registration_breaks_file(self):
         path = os.path.join(data_path, "weird_short_3_mice")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/breaks_in_registrations.csv")
+        f_path = os.path.join(res_path + "/diagnostics/breaks_in_registrations.csv")
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str12)
@@ -515,8 +502,7 @@ class TestRunDiagnostics(unittest.TestCase):
     def test_mismatch_antennas_file(self):
         path = os.path.join(data_path, "weird_short_3_mice")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/antenna_mismatches.csv")
+        f_path = os.path.join(res_path + "/diagnostics/antenna_mismatches.csv")
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str11)
@@ -524,8 +510,9 @@ class TestRunDiagnostics(unittest.TestCase):
     def test_total_mismatch_antennas_file(self):
         path = os.path.join(data_path, "weird_short_3_mice")
         res_path = os.path.join(path, "Results")
-        f_path = os.path.join(res_path +
-                              "/diagnostics/incorrect_antenna_transitions.csv")
+        f_path = os.path.join(
+            res_path + "/diagnostics/incorrect_antenna_transitions.csv"
+        )
         f = open(f_path)
         read = f.read()
         self.assertEqual(read, self.str13)
@@ -540,32 +527,30 @@ class TestRunDiagnostics(unittest.TestCase):
         out = "antenna pair,  count, percentage\n"
         for pair in uf.PAIRS:
             if pair in ["3 6", "1 3", "4 6"]:
-                exact_mis = np.round(100*self.mismatch1[pair]/self.length)
-                out += "%s, %d, %3.2f per 100\n" % (pair,
-                                                    self.mismatch1[pair],
-                                                    exact_mis)
+                exact_mis = np.round(100 * self.mismatch1[pair] / self.length)
+                out += "%s, %d, %3.2f per 100\n" % (
+                    pair,
+                    self.mismatch1[pair],
+                    exact_mis,
+                )
             else:
                 out += "%s, %d, %3.2f per 100\n" % (pair, 0, 0.00)
         self.assertEqual(out, self.str11)
 
     def test_no_skipped_string(self):
-        out = u"type, count, percentage\n"
+        out = "type, count, percentage\n"
         for pair in ["skipped one", "skipped two", "skipped more"]:
-            out += u"%s, %d, %3.2f per 100\n" % (pair, 0, 0.00)
+            out += "%s, %d, %3.2f per 100\n" % (pair, 0, 0.00)
         self.assertEqual(self.str24, out)
 
     def test_skipped_string(self):
-        out = u"type, count, percentage\n"
+        out = "type, count, percentage\n"
         for pair in ["skipped one", "skipped two", "skipped more"]:
-            exact_mis = np.round(100*2/self.length)
+            exact_mis = np.round(100 * 2 / self.length)
             if pair == "skipped more":
-                out += u"%s, %d, %3.2f per 100\n" % (pair,
-                                                     0,
-                                                     0.0)
+                out += "%s, %d, %3.2f per 100\n" % (pair, 0, 0.0)
             else:
-                out += u"%s, %d, %3.2f per 100\n" % (pair,
-                                                     2,
-                                                     exact_mis)
+                out += "%s, %d, %3.2f per 100\n" % (pair, 2, exact_mis)
         self.assertEqual(out, self.str14)
 
 
@@ -575,16 +560,19 @@ class TestTransformVisits(unittest.TestCase):
         path = os.path.join(data_path, "weird_short")
         raw_data = uf.read_single_file(path, "20101010_110000.txt")
         data = uf.from_raw_data(raw_data)
-        cls.data = ut.get_animal_position(data["Time"],
-                                          data["Antenna"],
-                                          "mouse_1", 2,
-                                          same_pipe=SAME_PIPE,
-                                          same_address=SAME_ADDRESS,
-                                          opposite_pipe=OPPOSITE_PIPE,
-                                          address=ADDRESS,
-                                          surrounding=SURROUNDING,
-                                          address_not_adjacent=NON_ADJACENT,
-                                          internal_antennas=[])
+        cls.data = ut.get_animal_position(
+            data["Time"],
+            data["Antenna"],
+            "mouse_1",
+            2,
+            same_pipe=SAME_PIPE,
+            same_address=SAME_ADDRESS,
+            opposite_pipe=OPPOSITE_PIPE,
+            address=ADDRESS,
+            surrounding=SURROUNDING,
+            address_not_adjacent=NON_ADJACENT,
+            internal_antennas=[],
+        )
         cls.visits = uf.transform_visits(cls.data)
 
     def test1(self):
@@ -609,7 +597,7 @@ class TestRenameAntennas(unittest.TestCase):
     def test_1(self):
         out = []
         for i, row in enumerate(self.data["Antenna"]):
-            out.append(row == self.old_data["Antenna"][i]+"_setup1")
+            out.append(row == self.old_data["Antenna"][i] + "_setup1")
         self.assertEqual(set(out), set([True]))
 
     def test_2(self):
@@ -622,8 +610,7 @@ class TestRenameAntennas(unittest.TestCase):
         self.assertTrue(np.all(self.data["Time"] == self.old_data["Time"]))
 
     def test_5(self):
-        self.assertTrue(np.all(self.data["Duration"] ==
-                               self.old_data["Duration"]))
+        self.assertTrue(np.all(self.data["Duration"] == self.old_data["Duration"]))
 
     def test_6(self):
         self.assertTrue(np.all(self.data["Tag"] == self.old_data["Tag"]))
@@ -636,22 +623,24 @@ class TestAppendData(unittest.TestCase):
         raw_data = uf.read_single_file(path, "20101010_110000.txt")
         cls.data1 = uf.from_raw_data(raw_data)
         cls.data2 = uf.from_raw_data(raw_data)
-        cls.data2["Time"] += 15*60
+        cls.data2["Time"] += 15 * 60
         cls.combined_data = uf.append_data_sources([cls.data1, cls.data2])
 
     def test1(self):
-        self.assertEqual(len(self.data1) + len(self.data2),
-                         len(self.combined_data))
+        self.assertEqual(len(self.data1) + len(self.data2), len(self.combined_data))
 
     def test2(self):
-        self.assertTrue(np.all((self.combined_data["Time"][1:] -
-                                self.combined_data["Time"][:-1]) > 0))
+        self.assertTrue(
+            np.all(
+                (self.combined_data["Time"][1:] - self.combined_data["Time"][:-1]) > 0
+            )
+        )
 
     def test_mouse3(self):
         indx = np.where(self.combined_data["Tag"] == "mouse_3")[0]
         line1 = self.combined_data[indx[0]].copy()
         line2 = self.combined_data[indx[1]].copy()
-        line1["Time"] += 15*60
+        line1["Time"] += 15 * 60
         self.assertTrue(np.all(line1 == line2))
 
 
@@ -659,20 +648,19 @@ class TestTunnelErrors(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         antennas = ["1", "2", "1", "2", "3", "4", "5", "6", "7"]
-        times = [1,   2,  2.5,   3,  4.5, 5.5, 6.5, 7.5, 10.5]
-        durations = [3, 600,  3,    34,  55,  66, 1999, 200, 100]
+        times = [1, 2, 2.5, 3, 4.5, 5.5, 6.5, 7.5, 10.5]
+        durations = [3, 600, 3, 34, 55, 66, 1999, 200, 100]
         cls.pred_out = {"1 2": 1, "3 4": 0, "5 6": 1, "7 8": 0}
         keys = cls.pred_out.keys()
-        cls.out, cls.tot = uf.incorrect_tunnel_single_mouse(keys,
-                                                            antennas,
-                                                            times, durations)
+        cls.out, cls.tot = uf.incorrect_tunnel_single_mouse(
+            keys, antennas, times, durations
+        )
         cls.pred_tot = {"1 2": 3, "3 4": 1, "5 6": 1, "7 8": 0}
         path = os.path.join(data_path, "weird_very_short_3_mice")
         cls.raw_data = uf.read_single_file(path, "20101010_110000.txt")
         cls.data = uf.from_raw_data(cls.raw_data)
         config = SetupConfig()
-        cls.out_i, cls.out_tot_i = uf.incorrect_tunnel_registrations(cls.data,
-                                                                     config)
+        cls.out_i, cls.out_tot_i = uf.incorrect_tunnel_registrations(cls.data, config)
         cls.pred_out_i = {"1 2": 0, "3 4": 0, "5 6": 2, "7 8": 0}
         cls.pred_tot_i = {"1 2": 2, "3 4": 1, "5 6": 7, "7 8": 0}
 
@@ -688,5 +676,6 @@ class TestTunnelErrors(unittest.TestCase):
     def test_data_total(self):
         self.assertEqual(self.pred_tot_i, self.out_tot_i)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

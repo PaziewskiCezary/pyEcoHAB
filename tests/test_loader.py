@@ -18,16 +18,19 @@ from pyEcoHAB import get_dynamic_interactions
 class TestLoader(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.path1 = os.path.join(data_path, "modular_1",
-                                 "data_setup_additional")
+        cls.path1 = os.path.join(data_path, "modular_1", "data_setup_additional")
         cls.dataset1 = Loader(cls.path1, visit_threshold=1.5, prefix="gugu")
         cls.setup1 = SetupConfig(cls.path1)
         cls.dataset1_standard = Loader(cls.path1)
         cls.path2 = os.path.join(data_path, "weird_very_short")
         cls.dataset2 = Loader(cls.path2, visit_threshold=2)
         cls.setup3 = SetupConfig(path=data_path, fname="setup_short.txt")
-        cls.dataset3 = Loader(cls.path1, visit_threshold=1.5,
-                              setup_config=cls.setup3, remove_antennas=["8"])
+        cls.dataset3 = Loader(
+            cls.path1,
+            visit_threshold=1.5,
+            setup_config=cls.setup3,
+            remove_antennas=["8"],
+        )
         cls.path_empty = os.path.join(data_path, "empty")
 
     def test_load_empty(self):
@@ -64,8 +67,7 @@ class TestLoader(unittest.TestCase):
 
     def test_visits_cage_A_duration(self):
         out = self.dataset2.get_visits(cage="cage A")
-        self.assertTrue(np.isclose(out[0].duration,
-                                   (out[0].t_end - out[0].t_start)))
+        self.assertTrue(np.isclose(out[0].duration, (out[0].t_end - out[0].t_start)))
 
     def test_visits_cage_A2(self):
         out = self.dataset2.get_visits(cage="cage A", t_end=1286708960.687)
@@ -80,27 +82,27 @@ class TestLoader(unittest.TestCase):
         self.assertEqual([], out)
 
     def test_visits_different_cages(self):
-        out = self.dataset2.get_visits(t_start=1286708669.65,
-                                       t_end=1286708768.349)
+        out = self.dataset2.get_visits(t_start=1286708669.65, t_end=1286708768.349)
         self.assertEqual(len(out), 4)
 
     def test_visits_different_cages_sorted(self):
-        out = self.dataset2.get_visits(t_start=1286708669.65,
-                                       t_end=1286708768.349)
+        out = self.dataset2.get_visits(t_start=1286708669.65, t_end=1286708768.349)
         expected = True
         for i, o in enumerate(out[:-1]):
-            if o.t_start > out[i+1].t_start:
+            if o.t_start > out[i + 1].t_start:
                 expected = False
         self.assertTrue(expected)
 
     def test_visits_different_cages_2(self):
-        out = self.dataset2.get_visits(t_start=1286708669.65,
-                                       t_end=1286708768.349, cage="cage C")
+        out = self.dataset2.get_visits(
+            t_start=1286708669.65, t_end=1286708768.349, cage="cage C"
+        )
         self.assertEqual(len(out), 2)
 
     def test_visits_different_cages_3(self):
-        out = self.dataset2.get_visits(t_start=1286708669.65,
-                                       t_end=1286708768.349, cage="cage D")
+        out = self.dataset2.get_visits(
+            t_start=1286708669.65, t_end=1286708768.349, cage="cage D"
+        )
         self.assertEqual(len(out), 2)
 
     def test_visits_internal_antennas_mouse1(self):
@@ -111,7 +113,7 @@ class TestLoader(unittest.TestCase):
     def test_visits_internal_antennas_mouse2(self):
         out = self.dataset1.get_visits("mouse_2")
         out2 = self.dataset3.get_visits("mouse_2")
-        self.assertEqual(len(out)-1, len(out2))
+        self.assertEqual(len(out) - 1, len(out2))
 
 
 class TestMerger(unittest.TestCase):
@@ -128,9 +130,10 @@ class TestMerger(unittest.TestCase):
         cls.original_data = Loader(sample_data)
 
     def test_1(self):
-        self.assertEqual(self.data.res_dir,
-                         "%s_%s" % (self.res_dir,
-                                    date.today().strftime("%d.%m.%y")))
+        self.assertEqual(
+            self.data.res_dir,
+            "%s_%s" % (self.res_dir, date.today().strftime("%d.%m.%y")),
+        )
 
     def test_cages(self):
         out = sorted(["cage A", "cage B", "cage C", "cage D"])
@@ -144,8 +147,8 @@ class TestMerger(unittest.TestCase):
 
     def test_incohort_sociability_2(self):
         config = Timeline(sample_data)
-        out_1 = get_incohort_sociability(self.data, config, 24*3600)
-        out_2 = get_incohort_sociability(self.original_data, config, 24*3600)
+        out_1 = get_incohort_sociability(self.data, config, 24 * 3600)
+        out_2 = get_incohort_sociability(self.original_data, config, 24 * 3600)
         self.assertEqual(out_1, out_2)
 
     def test_solitude(self):
@@ -162,17 +165,16 @@ class TestMerger(unittest.TestCase):
 
     def test_activity_2(self):
         config = Timeline(sample_data)
-        out_1 = get_activity(self.data, config, 24*3600)
-        out_2 = get_activity(self.original_data, config, 24*3600)
+        out_1 = get_activity(self.data, config, 24 * 3600)
+        out_2 = get_activity(self.original_data, config, 24 * 3600)
         self.assertEqual(out_1, out_2)
 
     def get_dynamic_interactions(self):
         config = Timeline(sample_data)
         out_1 = get_dynamic_interactions(self.data, config, N=1, seed=1)
-        out_2 = get_dynamic_interactions(self.original_data, config, N=1,
-                                         seed=1)
+        out_2 = get_dynamic_interactions(self.original_data, config, N=1, seed=1)
         self.assertEqual(out_1, out_2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

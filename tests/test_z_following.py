@@ -39,10 +39,9 @@ class TestFollowing2ndMouseInPipe(unittest.TestCase):
         res = fol.following_single_pair(dir2, dir1, config.directions)
         cls.out2, cls.time_together2, cls.intervals2 = res
 
-        antennas1 = ["1", "2", "3", "4", "5",  "6", "7",  "8", "1", "2"]
+        antennas1 = ["1", "2", "3", "4", "5", "6", "7", "8", "1", "2"]
         times1 = [15, 16.5, 19, 20, 21, 22, 24, 25, 29, 34]
-        antennas2 = ["8", "1", "2", "3", "4", "5", "6",
-                     "7", "8", "1", "2"]
+        antennas2 = ["8", "1", "2", "3", "4", "5", "6", "7", "8", "1", "2"]
         times2 = [10, 16, 19, 19.5, 22, 25, 26, 27, 28, 31, 35]
         dir1 = uf.extract_directions(times1, antennas1, 3, config.directions)
         dir2 = uf.extract_directions(times2, antennas2, 3, config.directions)
@@ -81,14 +80,18 @@ class TestFollowingMatrices(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         ta = {
-            "mouse1": [[15, 16.5, 19, 20, 21, 22, 24, 25, 29, 34],
-                       ["1", "2",  "3",    "4",  "5",  "6",  "7",
-                        "8", "1", "2"]],
-            "mouse2": [[10, 16, 19, 19.5, 22, 25,  26, 27, 28, 31, 35],
-                       ["8", "1",  "2", "3", "4", "5", "6", "7", "8", "1",
-                        "2"], ],
-            "mouse3": [[10, 16, 17, 18, 22, 25, 26, 27],
-                       ["1", "2", "3", "4",  "4",  "3",  "2", "1"], ]
+            "mouse1": [
+                [15, 16.5, 19, 20, 21, 22, 24, 25, 29, 34],
+                ["1", "2", "3", "4", "5", "6", "7", "8", "1", "2"],
+            ],
+            "mouse2": [
+                [10, 16, 19, 19.5, 22, 25, 26, 27, 28, 31, 35],
+                ["8", "1", "2", "3", "4", "5", "6", "7", "8", "1", "2"],
+            ],
+            "mouse3": [
+                [10, 16, 17, 18, 22, 25, 26, 27],
+                ["1", "2", "3", "4", "4", "3", "2", "1"],
+            ],
         }
         mice_list = ["mouse1", "mouse2", "mouse3"]
         directions_dict = {}
@@ -100,13 +103,12 @@ class TestFollowingMatrices(unittest.TestCase):
         config = SetupConfig()
 
         for mouse in mice_list:
-            directions_dict[mouse] = uf.extract_directions(ta[mouse][0],
-                                                           ta[mouse][1],
-                                                           last[mouse],
-                                                           config.directions)
-        out = fol.following_matrices(directions_dict,
-                                     mice_list,
-                                     0, 1000, config.directions)
+            directions_dict[mouse] = uf.extract_directions(
+                ta[mouse][0], ta[mouse][1], last[mouse], config.directions
+            )
+        out = fol.following_matrices(
+            directions_dict, mice_list, 0, 1000, config.directions
+        )
         cls.following = out[0]
         cls.time_together = out[1]
         cls.interval_details = out[2]
@@ -191,7 +193,7 @@ class TestInsertInterval(unittest.TestCase):
     def no_insert_first(self):
         t_starts = []
         t_ends = []
-        out = fol.insert_interval(0, 1, t_starts, t_ends, .5)
+        out = fol.insert_interval(0, 1, t_starts, t_ends, 0.5)
         self.assertEqual(out, 0)
 
     def test_t_start_in_starts(self):
@@ -278,8 +280,7 @@ class TestIntervalGeneration(unittest.TestCase):
     def setUpClass(cls):
         t_starts = [3, 5, 10]
         t_ends = [4, 8, 12]
-        cls.intervals = set(uf.get_interval_durations_2_lists(t_starts,
-                                                              t_ends))
+        cls.intervals = set(uf.get_interval_durations_2_lists(t_starts, t_ends))
         duration = 40
         random.seed(1)
         cls.out1 = fol.generate_intervals(t_starts, t_ends, duration)
@@ -299,13 +300,11 @@ class TestIntervalGeneration(unittest.TestCase):
         self.assertEqual(len(self.out2[1]), 3)
 
     def test_intervals_1(self):
-        intervals = set(uf.get_interval_durations_2_lists(self.out1[0],
-                                                          self.out1[1]))
+        intervals = set(uf.get_interval_durations_2_lists(self.out1[0], self.out1[1]))
         self.assertEqual(intervals, self.intervals)
 
     def test_intervals_2(self):
-        intervals = set(uf.get_interval_durations_2_lists(self.out2[0],
-                                                          self.out2[1]))
+        intervals = set(uf.get_interval_durations_2_lists(self.out2[0], self.out2[1]))
         self.assertEqual(intervals, self.intervals)
 
     def test_different_1(self):
@@ -315,10 +314,8 @@ class TestIntervalGeneration(unittest.TestCase):
         self.assertFalse(self.out1[1] == self.out2[1])
 
     def test_different_2(self):
-        ints1 = uf.get_interval_durations_2_lists(self.out1[0],
-                                                  self.out1[1])
-        ints2 = uf.get_interval_durations_2_lists(self.out2[0],
-                                                  self.out2[1])
+        ints1 = uf.get_interval_durations_2_lists(self.out1[0], self.out1[1])
+        ints2 = uf.get_interval_durations_2_lists(self.out2[0], self.out2[1])
         self.assertFalse(ints1 == ints2)
 
 
@@ -330,60 +327,81 @@ class TestExecution(unittest.TestCase):
         cls.uneven = Timeline(data_path, "uneven_phases.txt")
 
     def test_phases(self):
-        fol.get_dynamic_interactions(self.data, self.config, 1,
-                                     save_distributions=True,
-                                     save_figures=True, return_median=False,
-                                     delimiter=";",
-                                     save_times_following=True)
+        fol.get_dynamic_interactions(
+            self.data,
+            self.config,
+            1,
+            save_distributions=True,
+            save_figures=True,
+            return_median=False,
+            delimiter=";",
+            save_times_following=True,
+        )
 
     def test_ALL(self):
-        fol.get_dynamic_interactions(self.data, self.config, 1,
-                                     binsize="ALL")
+        fol.get_dynamic_interactions(self.data, self.config, 1, binsize="ALL")
 
     def test_ALL(self):
-        fol.get_dynamic_interactions(self.data, self.config, 1,
-                                     binsize="ALL",
-                                     res_dir=os.path.join(self.data.path,
-                                                          "Resu2"),
-                                     save_distributions=True,
-                                     save_figures=True,
-                                     return_median=True, delimiter=";",
-                                     save_times_following=True,
-                                     full_dir_tree=False)
+        fol.get_dynamic_interactions(
+            self.data,
+            self.config,
+            1,
+            binsize="ALL",
+            res_dir=os.path.join(self.data.path, "Resu2"),
+            save_distributions=True,
+            save_figures=True,
+            return_median=True,
+            delimiter=";",
+            save_times_following=True,
+            full_dir_tree=False,
+        )
 
     def test_short_2(self):
-        fol.get_dynamic_interactions(self.data, self.config, 1,
-                                     binsize=4800,
-                                     res_dir=os.path.join(self.data.path,
-                                                          "Resu2"),
-
-                                     save_distributions=True,
-                                     save_figures=True,
-                                     return_median=True, delimiter=";",
-                                     save_times_following=True,
-                                     full_dir_tree=False)
+        fol.get_dynamic_interactions(
+            self.data,
+            self.config,
+            1,
+            binsize=4800,
+            res_dir=os.path.join(self.data.path, "Resu2"),
+            save_distributions=True,
+            save_figures=True,
+            return_median=True,
+            delimiter=";",
+            save_times_following=True,
+            full_dir_tree=False,
+        )
 
     def test_short_bin(self):
         fol.get_dynamic_interactions(self.data, self.config, 1, binsize=3600)
 
     def test_long_bin(self):
-        fol.get_dynamic_interactions(self.data, self.config, 1,
-                                     save_distributions=True,
-                                     save_figures=True,
-                                     return_median=True, delimiter=";",
-                                     save_times_following=True,
-                                     seed=1,
-                                     binsize=24*3600)
+        fol.get_dynamic_interactions(
+            self.data,
+            self.config,
+            1,
+            save_distributions=True,
+            save_figures=True,
+            return_median=True,
+            delimiter=";",
+            save_times_following=True,
+            seed=1,
+            binsize=24 * 3600,
+        )
 
     def test_whole_phase_uneven(self):
-        fol.get_dynamic_interactions(self.data, self.uneven, 1,
-                                     binsize="whole phase",
-                                     save_distributions=True,
-                                     save_figures=True,
-                                     return_median=True, delimiter=";",
-                                     save_times_following=True,
-                                     seed=1)
+        fol.get_dynamic_interactions(
+            self.data,
+            self.uneven,
+            1,
+            binsize="whole phase",
+            save_distributions=True,
+            save_figures=True,
+            return_median=True,
+            delimiter=";",
+            save_times_following=True,
+            seed=1,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

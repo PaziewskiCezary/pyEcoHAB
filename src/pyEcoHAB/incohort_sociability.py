@@ -9,9 +9,13 @@ import numpy as np
 
 from . import utility_functions as utils
 from .plotting_functions import make_RasterPlot, single_in_cohort_soc_plot
-from .write_to_file import (write_binned_data, write_csv_alone,
-                            write_csv_rasters, write_sum_data,
-                            write_two_values)
+from .write_to_file import (
+    write_binned_data,
+    write_csv_alone,
+    write_csv_rasters,
+    write_sum_data,
+    write_two_values,
+)
 
 
 def prepare_mice_intervals(data_mice, address):

@@ -12,6 +12,9 @@ from .Loader import Loader, Merger
 from .SetupConfig import ExperimentSetupConfig, IdentityConfig, SetupConfig
 from .single_antenna_registrations import get_single_antenna_stats
 from .Timeline import Timeline
-from .trajectories import (get_antenna_transition_durations,
-                           get_light_dark_transitions, get_registration_trains)
+from .trajectories import (
+    get_antenna_transition_durations,
+    get_light_dark_transitions,
+    get_registration_trains,
+)
 from .tube_dominance import get_tube_dominance

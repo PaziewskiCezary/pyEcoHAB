@@ -9,39 +9,33 @@ from pyEcoHAB import sample_data, data_path
 from pyEcoHAB import Loader
 from pyEcoHAB import Timeline
 
+
 class TestGetVisits(unittest.TestCase):
     def test_intervals_only_in_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90],
-                     [110, 130]]
+        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v = cv.get_visits(intervals, t_start, t_stop)
         self.assertEqual(v, ([3, 2, 30, 10], False))
 
     def test_intervals_starting_before_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v = cv.get_visits(intervals, t_start, t_stop)
         self.assertEqual(v, ([1, 3, 2, 30, 10], True))
 
     def test_intervals_ending_after_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 4], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 4], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v = cv.get_visits(intervals, t_start, t_stop)
         self.assertEqual(v, ([3, 2, 30, 10, 5], False))
 
     def test_intervals(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v = cv.get_visits(intervals, t_start, t_stop)
         self.assertEqual(v, ([1, 3, 2, 30, 10, 5], True))
 
@@ -57,111 +51,90 @@ class TestVisitsDurationsPhase(unittest.TestCase):
     def test_one_bin_test_intervals_only_in_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90],
-                     [110, 130]]
+        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(v, [[3, 2, 30, 10]])
 
     def test_one_bin_test_intervals_only_in_the_bin_b(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90],
-                     [110, 130]]
+        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(a, [False])
 
     def test_one_bin_test_intervals_starting_before_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(v, [[1, 3, 2, 30, 10]])
 
     def test_one_bin_test_intervals_starting_before_the_bin_b(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(a, [True])
 
     def test_one_bin_test_intervals_ending_after_the_bin(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 4], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 4], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(v, [[3, 2, 30, 10, 5]])
 
     def test_one_bin_test_intervals_ending_after_the_bin_b(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 4], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 4], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(a, [False])
 
     def test_one_bin_test_intervals(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(v, [[1, 3, 2, 30, 10, 5]])
 
     def test_one_bin_test_intervals_b(self):
         t_start = 10
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [95, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [95, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 90)
         self.assertEqual(a, [True])
 
     def test_more_bin_test_intervals_only_in_the_bin(self):
         t_start = 0
         t_stop = 100
-        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90],
-                     [110, 130]]
+        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 10)
-        self.assertEqual(v, [[4], [3, 2], [], [], [10], [10], [10],
-                             [], [10], []])
+        self.assertEqual(v, [[4], [3, 2], [], [], [10], [10], [10], [], [10], []])
 
     def test_more_bin_test_intervals_only_in_the_bin_b(self):
         t_start = 0
         t_stop = 100
-        intervals = [[1, 5], [12, 15], [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 5], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 10)
-        self.assertEqual(a, [False, False, False, False, False, True,
-                             True, False, False, False])
+        self.assertEqual(
+            a, [False, False, False, False, False, True, True, False, False, False]
+        )
 
     def test_more_bin_test_intervals_starting_before_the_bin(self):
         t_start = 0
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 10)
-        self.assertEqual(v,
-                         [[9], [1, 3, 2], [], [],
-                          [10], [10], [10], [], [10], []])
+        self.assertEqual(v, [[9], [1, 3, 2], [], [], [10], [10], [10], [], [10], []])
 
     def test_more_bin_test_intervals_starting_before_the_bin_b(self):
         t_start = 0
         t_stop = 100
-        intervals = [[1, 11], [12, 15],
-                     [18, 20], [40, 70],
-                     [80, 90], [110, 130]]
+        intervals = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         v, a = cv.get_visits_in_bins(intervals, t_start, t_stop, 10)
-        self.assertEqual(a, [False, True, False, False, False, True,
-                             True, False, False, False])
+        self.assertEqual(
+            a, [False, True, False, False, False, True, True, False, False, False]
+        )
 
 
 class TestCalcVisitsPerMouse(unittest.TestCase):
@@ -169,14 +142,11 @@ class TestCalcVisitsPerMouse(unittest.TestCase):
     def setUpClass(cls):
         t_start = 0
         t_stop = 100
-        ints = [[1, 11], [12, 15],
-                [18, 20], [40, 70],
-                [80, 90], [110, 130]]
+        ints = [[1, 11], [12, 15], [18, 20], [40, 70], [80, 90], [110, 130]]
         binsize = 10
-        cls.vis, cls.dur, cls.all_v = cv.calc_visit_per_mouse(ints,
-                                                              t_start,
-                                                              t_stop,
-                                                              binsize)
+        cls.vis, cls.dur, cls.all_v = cv.calc_visit_per_mouse(
+            ints, t_start, t_stop, binsize
+        )
 
     def test_visits(self):
         out = [1, 2, 0, 0, 1, 0, 0, 0, 1, 0]
@@ -187,8 +157,7 @@ class TestCalcVisitsPerMouse(unittest.TestCase):
         self.assertEqual(durations, self.dur)
 
     def test_all_visits(self):
-        all_vis = [[9], [1, 3, 2], [], [],
-                   [10], [10], [10], [], [10], []]
+        all_vis = [[9], [1, 3, 2], [], [], [10], [10], [10], [], [10], []]
         self.assertEqual(all_vis, self.all_v)
 
 
@@ -202,7 +171,7 @@ class TestCalculateVisitsDurations(unittest.TestCase):
                 ["A", 18, 20],
                 ["A", 40, 70],
                 ["A", 80, 90],
-                ["A", 110, 130]
+                ["A", 110, 130],
             ],
             "mouse_2": [
                 ["A", 1, 11],
@@ -210,28 +179,20 @@ class TestCalculateVisitsDurations(unittest.TestCase):
                 ["A", 18, 20],
                 ["B", 40, 70],
                 ["A", 80, 90],
-                ["B", 110, 130]
-            ]
+                ["B", 110, 130],
+            ],
         }
         t_start = 0
         t_stop = 100
         binsize = 10
         address = "A"
         cls.mice = ["mouse_1", "mouse_2"]
-        cls.vis, cls.dur,\
-            cls.all_v = cv.calculate_visits_and_durations(data,
-                                                          cls.mice,
-                                                          address,
-                                                          t_start,
-                                                          t_stop,
-                                                          binsize)
-        cls.visB, cls.durB,\
-            cls.all_vB = cv.calculate_visits_and_durations(data,
-                                                           cls.mice,
-                                                           "B",
-                                                           t_start,
-                                                           t_stop,
-                                                           binsize)
+        cls.vis, cls.dur, cls.all_v = cv.calculate_visits_and_durations(
+            data, cls.mice, address, t_start, t_stop, binsize
+        )
+        cls.visB, cls.durB, cls.all_vB = cv.calculate_visits_and_durations(
+            data, cls.mice, "B", t_start, t_stop, binsize
+        )
 
     def test_keys_1(self):
         self.assertEqual(sorted(self.vis.keys()), sorted(self.mice))
@@ -251,8 +212,7 @@ class TestCalculateVisitsDurations(unittest.TestCase):
         self.assertEqual(durations, self.dur["mouse_1"])
 
     def test_all_visits_mouse1(self):
-        all_vis = [[9], [1, 3, 2], [], [],
-                   [10], [10], [10], [], [10], []]
+        all_vis = [[9], [1, 3, 2], [], [], [10], [10], [10], [], [10], []]
         self.assertEqual(all_vis, self.all_v["mouse_1"])
 
     def test_vis_mouse2(self):
@@ -264,8 +224,7 @@ class TestCalculateVisitsDurations(unittest.TestCase):
         self.assertEqual(durations, self.dur["mouse_2"])
 
     def test_all_visits_mouse2(self):
-        all_vis = [[9], [1, 2], [], [],
-                   [], [], [], [], [10], []]
+        all_vis = [[9], [1, 2], [], [], [], [], [], [], [10], []]
         self.assertEqual(all_vis, self.all_v["mouse_2"])
 
     def test_vis_B_mouse1(self):
@@ -289,8 +248,7 @@ class TestCalculateVisitsDurations(unittest.TestCase):
         self.assertEqual(durations, self.durB["mouse_2"])
 
     def test_all_visits_B_mouse2(self):
-        all_vis = [[], [3], [], [],
-                   [10], [10], [10], [], [], []]
+        all_vis = [[], [3], [], [], [10], [10], [10], [], [], []]
         self.assertEqual(all_vis, self.all_vB["mouse_2"])
 
 
@@ -303,7 +261,7 @@ class TestGetActivity(unittest.TestCase):
         cls.ALL = cv.get_activity(cls.data, cls.config, "ALL")
         cls.whole_phases = cv.get_activity(cls.data, cls.config, "whole phase")
         cls.whole_uneven = cv.get_activity(cls.data, cls.uneven, "whole phase")
-        cls.uneven_12h = cv.get_activity(cls.data, cls.uneven, 12*3600)
+        cls.uneven_12h = cv.get_activity(cls.data, cls.uneven, 12 * 3600)
 
     def test_ALL(self):
         out = []
@@ -329,10 +287,14 @@ class TestGetActivity(unittest.TestCase):
                 S[address][0][phase] = OrderedDict()
                 S[address][1][phase] = OrderedDict()
                 for mouse in self.uneven_12h[address][0][phase].keys():
-                    S[address][0][phase] = [sum(self.uneven_12h[address][0][phase][mouse])]
-                    S[address][1][phase] = [sum(self.uneven_12h[address][0][phase][mouse])]
+                    S[address][0][phase] = [
+                        sum(self.uneven_12h[address][0][phase][mouse])
+                    ]
+                    S[address][1][phase] = [
+                        sum(self.uneven_12h[address][0][phase][mouse])
+                    ]
         self.assertEqual(sorted(S), sorted(self.whole_uneven))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

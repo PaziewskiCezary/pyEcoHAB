@@ -6,8 +6,11 @@ import os
 import numpy as np
 
 from . import utility_functions as utils
-from .plotting_functions import (make_RasterPlot, single_heat_map,
-                                 single_in_cohort_soc_plot)
+from .plotting_functions import (
+    make_RasterPlot,
+    single_heat_map,
+    single_in_cohort_soc_plot,
+)
 from .write_to_file import save_single_histograms, write_csv_rasters
 
 

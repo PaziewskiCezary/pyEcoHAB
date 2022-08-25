@@ -24,8 +24,14 @@ class TestExecution(unittest.TestCase):
         sar.get_single_antenna_stats(self.data, self.config, 3600)
 
     def test3(self):
-        self.assertRaises(Exception, sar.get_single_antenna_stats,
-                          self.data, self.config, 3600, "gugu")
+        self.assertRaises(
+            Exception,
+            sar.get_single_antenna_stats,
+            self.data,
+            self.config,
+            3600,
+            "gugu",
+        )
 
     def test4(self):
         sar.get_single_antenna_stats(self.data, self.config, 900, "1")
@@ -40,5 +46,5 @@ class TestExecution(unittest.TestCase):
         sar.get_single_antenna_stats(self.data, self.config, 1800)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -21,7 +21,7 @@ SAME_PIPE = {
     "5": ["5", "6"],
     "6": ["5", "6"],
     "7": ["7", "8"],
-    "8": ["7", "8"]
+    "8": ["7", "8"],
 }
 
 SAME_ADDRESS = {
@@ -43,7 +43,7 @@ OPPOSITE_PIPE = {
     "5": ["1", "2"],
     "6": ["1", "2"],
     "7": ["3", "4"],
-    "8": ["3", "4"]
+    "8": ["3", "4"],
 }
 
 ADDRESS = {
@@ -79,9 +79,29 @@ SURROUNDING = {
     ("6", "8"): "cage D",  # 3
 }
 
-KEYS = ['1 2', '2 1', '3 4', '4 3', '5 6', '6 5', '7 8', '8 7']
-PAIRS = ["1 3", "1 4", "1 5", "1 6", "1 7", "2 4", "2 5", "2 6", "2 7", "2 8",
-         "3 5", "3 6", "3 7", "3 8", "4 6", "4 7", "4 8", "5 7", "5 8", "6 8"]
+KEYS = ["1 2", "2 1", "3 4", "4 3", "5 6", "6 5", "7 8", "8 7"]
+PAIRS = [
+    "1 3",
+    "1 4",
+    "1 5",
+    "1 6",
+    "1 7",
+    "2 4",
+    "2 5",
+    "2 6",
+    "2 7",
+    "2 8",
+    "3 5",
+    "3 6",
+    "3 7",
+    "3 8",
+    "4 6",
+    "4 7",
+    "4 8",
+    "5 7",
+    "5 8",
+    "6 8",
+]
 
 
 class TestReadingIn(unittest.TestCase):
@@ -156,8 +176,7 @@ class TestGetDicts(unittest.TestCase):
         cls.default = SetupConfig()
         path = os.path.join(data_path, "test_setups")
         cls.custom = SetupConfig(path=path, fname="setup_internal.txt")
-        cls.custom2 = SetupConfig(path=path,
-                                  fname="setup_internal2.txt")
+        cls.custom2 = SetupConfig(path=path, fname="setup_internal2.txt")
 
     def test_homecage_antenna(self):
         self.assertEqual(self.custom2.homecage_antenna, "2")
@@ -301,94 +320,92 @@ class TestGetDicts(unittest.TestCase):
         self.assertEqual([], self.custom.next_tunnel_antennas("2"))
 
     def test_next_tunnel_antennas_d1(self):
-        self.assertEqual(sorted(["4", "3", "7", "8"]),
-                         self.default.next_tunnel_antennas("1"))
+        self.assertEqual(
+            sorted(["4", "3", "7", "8"]), self.default.next_tunnel_antennas("1")
+        )
 
     def test_next_tunnel_antennas_d2(self):
-        self.assertEqual(sorted(["4", "3", "7", "8"]),
-                         self.default.next_tunnel_antennas("2"))
+        self.assertEqual(
+            sorted(["4", "3", "7", "8"]), self.default.next_tunnel_antennas("2")
+        )
 
     def test_next_tunnel_antennas_d3(self):
-        self.assertEqual(sorted(["1", "2", "5", "6"]),
-                         self.default.next_tunnel_antennas("3"))
+        self.assertEqual(
+            sorted(["1", "2", "5", "6"]), self.default.next_tunnel_antennas("3")
+        )
 
     def test_next_tunnel_antennas_d4(self):
-        self.assertEqual(sorted(["1", "2", "5", "6"]),
-                         self.default.next_tunnel_antennas("4"))
+        self.assertEqual(
+            sorted(["1", "2", "5", "6"]), self.default.next_tunnel_antennas("4")
+        )
 
     def test_next_tunnel_antennas_d5(self):
-        self.assertEqual(sorted(["3", "4", "7", "8"]),
-                         self.default.next_tunnel_antennas("5"))
+        self.assertEqual(
+            sorted(["3", "4", "7", "8"]), self.default.next_tunnel_antennas("5")
+        )
 
     def test_next_tunnel_antennas_d6(self):
-        self.assertEqual(sorted(["3", "4", "7", "8"]),
-                         self.default.next_tunnel_antennas("6"))
+        self.assertEqual(
+            sorted(["3", "4", "7", "8"]), self.default.next_tunnel_antennas("6")
+        )
 
     def test_next_tunnel_antennas_d7(self):
-        self.assertEqual(sorted(["1", "2", "5", "6"]),
-                         self.default.next_tunnel_antennas("7"))
+        self.assertEqual(
+            sorted(["1", "2", "5", "6"]), self.default.next_tunnel_antennas("7")
+        )
 
     def test_next_tunnel_antennas_d8(self):
-        self.assertEqual(sorted(["1", "2", "5", "6"]),
-                         self.default.next_tunnel_antennas("8"))
+        self.assertEqual(
+            sorted(["1", "2", "5", "6"]), self.default.next_tunnel_antennas("8")
+        )
 
     def test_cage_address_default(self):
         self.assertEqual(ADDRESS, self.default.get_cage_address_dict())
 
     def test_cage_address_custom(self):
-        out = {"1": "cage A",
-               "2": "cage B",
-               "8": "cage B"}
+        out = {"1": "cage A", "2": "cage B", "8": "cage B"}
         self.assertEqual(out, self.custom.get_cage_address_dict())
 
     def test_cage_adjacent_default(self):
-        self.assertEqual(ADDRESS_NON_ADJACENT,
-                         self.default.get_address_non_adjacent_dict())
+        self.assertEqual(
+            ADDRESS_NON_ADJACENT, self.default.get_address_non_adjacent_dict()
+        )
 
     def test_cage_adjacent_custom(self):
-        out = {"1": "cage B",
-               "2": "cage A"}
-        self.assertEqual(out,
-                         self.custom.get_address_non_adjacent_dict())
+        out = {"1": "cage B", "2": "cage A"}
+        self.assertEqual(out, self.custom.get_address_non_adjacent_dict())
 
     def test_cage_surrounding_default(self):
-        self.assertEqual(SURROUNDING,
-                         self.default.get_surrounding_dict())
+        self.assertEqual(SURROUNDING, self.default.get_surrounding_dict())
 
     def test_cage_surrounding_custom(self):
-        self.assertEqual({("1", "8"): 'cage B'},
-                         self.custom.get_surrounding_dict())
+        self.assertEqual({("1", "8"): "cage B"}, self.custom.get_surrounding_dict())
 
     def test_directions_custom(self):
-        self.assertEqual(["1 2", "2 1"],
-                         self.custom.get_directions_dict())
+        self.assertEqual(["1 2", "2 1"], self.custom.get_directions_dict())
 
     def test_directions_default(self):
-        self.assertEqual(KEYS,
-                         self.default.get_directions_dict())
+        self.assertEqual(KEYS, self.default.get_directions_dict())
 
     def test_unused_antennas_d(self):
-        self.assertEqual([],
-                         self.default.find_unused_antennas())
+        self.assertEqual([], self.default.find_unused_antennas())
 
     def test_unused_antennas_custom(self):
-        self.assertEqual(['3', '4', '5', '6', '7'],
-                         self.custom.find_unused_antennas())
+        self.assertEqual(["3", "4", "5", "6", "7"], self.custom.find_unused_antennas())
 
     def test_mismatch_pairs_default(self):
-        self.assertEqual(PAIRS,
-                         self.default.mismatched_pairs)
+        self.assertEqual(PAIRS, self.default.mismatched_pairs)
 
     def test_mismatch_pairs_custom(self):
-        self.assertEqual(["1 8"],
-                         self.custom.mismatched_pairs)
+        self.assertEqual(["1 8"], self.custom.mismatched_pairs)
 
     def test_all_antennas_custom(self):
         self.assertEqual(self.custom.all_antennas, ["1", "2", "8"])
 
     def test_all_antennas_default(self):
-        self.assertEqual(self.default.all_antennas, ["1", "2", "3", "4",
-                                                     "5", "6", "7", "8"])
+        self.assertEqual(
+            self.default.all_antennas, ["1", "2", "3", "4", "5", "6", "7", "8"]
+        )
 
 
 class TestExperimentSetupConfig(unittest.TestCase):
@@ -398,35 +415,31 @@ class TestExperimentSetupConfig(unittest.TestCase):
         path3 = os.path.join(data_path, "experiment_setup_renaming.txt")
         cls.config1 = SetupConfig(data_path, "standard_setup.txt")
         cls.config2 = SetupConfig(path=path2, fname="setup_internal.txt")
-        cls.experiment_config = ExperimentSetupConfig(path3,
-                                                      ecohab1=cls.config1,
-                                                      ecohab2=cls.config2)
+        cls.experiment_config = ExperimentSetupConfig(
+            path3, ecohab1=cls.config1, ecohab2=cls.config2
+        )
         path1 = os.path.join(data_path, "test_experiment_setups")
         cls.config3 = SetupConfig(path1, "setup1.txt")
         cls.config4 = SetupConfig(path1, "setup2.txt")
         full_path = os.path.join(path1, "experiment_setup.txt")
-        cls.full_exp = ExperimentSetupConfig(full_path,
-                                             ecohab_1=cls.config3,
-                                             ecohab_2=cls.config4)
+        cls.full_exp = ExperimentSetupConfig(
+            full_path, ecohab_1=cls.config3, ecohab_2=cls.config4
+        )
 
         path2 = os.path.join(data_path, "test_setups")
         path3 = os.path.join(data_path, "experiment_setup_renaming_2.txt")
-        cls.config5 = SetupConfig(path=path2,
-                                  fname="setup_internal2.txt")
-        cls.exp_i_antennas = ExperimentSetupConfig(path3,
-                                                   default1=cls.config1,
-                                                   custom2=cls.config5)
+        cls.config5 = SetupConfig(path=path2, fname="setup_internal2.txt")
+        cls.exp_i_antennas = ExperimentSetupConfig(
+            path3, default1=cls.config1, custom2=cls.config5
+        )
 
     def test_indentity_compartments(self):
-        out = {"ecohab1 cage A": "shared cage 1",
-               "ecohab2 cage B": "shared cage 1"}
-        self.assertEqual(self.experiment_config.identity_compartments,
-                         out)
+        out = {"ecohab1 cage A": "shared cage 1", "ecohab2 cage B": "shared cage 1"}
+        self.assertEqual(self.experiment_config.identity_compartments, out)
 
     def test_renames(self):
         out = {"ecohab1 cage C": "cage C"}
-        self.assertEqual(self.experiment_config.renames,
-                         out)
+        self.assertEqual(self.experiment_config.renames, out)
 
     def test_renames_full_exp(self):
         self.assertEqual(self.full_exp.renames, {})
@@ -438,496 +451,520 @@ class TestExperimentSetupConfig(unittest.TestCase):
             "ecohab_1 cage C": "cage C",
             "ecohab_2 cage C": "cage C",
         }
-        self.assertEqual(self.full_exp.identity_compartments,
-                         out)
+        self.assertEqual(self.full_exp.identity_compartments, out)
 
     def test_all_section_names(self):
-        out = sorted(["shared cage 1", "ecohab1 cage B", "cage C",
-                      "ecohab1 cage D", "ecohab1 tunnel 1", "ecohab1 tunnel 2",
-                      "ecohab1 tunnel 3", "ecohab1 tunnel 4", "ecohab2 cage A",
-                      "ecohab2 tunnel 1"])
+        out = sorted(
+            [
+                "shared cage 1",
+                "ecohab1 cage B",
+                "cage C",
+                "ecohab1 cage D",
+                "ecohab1 tunnel 1",
+                "ecohab1 tunnel 2",
+                "ecohab1 tunnel 3",
+                "ecohab1 tunnel 4",
+                "ecohab2 cage A",
+                "ecohab2 tunnel 1",
+            ]
+        )
 
         self.assertEqual(out, sorted(self.experiment_config.sections()))
 
     def test_all_section_names_full_exp(self):
-        out = sorted(["cage A", "ecohab_1 cage B", "ecohab_2 cage D",
-                      "cage C", "ecohab_1 tunnel 1", "ecohab_1 tunnel 2",
-                      "ecohab_2 tunnel 1", "ecohab_2 tunnel 2"])
+        out = sorted(
+            [
+                "cage A",
+                "ecohab_1 cage B",
+                "ecohab_2 cage D",
+                "cage C",
+                "ecohab_1 tunnel 1",
+                "ecohab_1 tunnel 2",
+                "ecohab_2 tunnel 1",
+                "ecohab_2 tunnel 2",
+            ]
+        )
 
         self.assertEqual(out, sorted(self.full_exp.sections()))
 
     def test_all_antennas(self):
-        self.assertEqual(sorted(self.experiment_config.all_antennas),
-                         sorted(['1_ecohab1', '1_ecohab2', '2_ecohab1',
-                                 '2_ecohab2', '3_ecohab1', '4_ecohab1',
-                                 '5_ecohab1', '6_ecohab1', '7_ecohab1',
-                                 '8_ecohab1', '8_ecohab2']))
+        self.assertEqual(
+            sorted(self.experiment_config.all_antennas),
+            sorted(
+                [
+                    "1_ecohab1",
+                    "1_ecohab2",
+                    "2_ecohab1",
+                    "2_ecohab2",
+                    "3_ecohab1",
+                    "4_ecohab1",
+                    "5_ecohab1",
+                    "6_ecohab1",
+                    "7_ecohab1",
+                    "8_ecohab1",
+                    "8_ecohab2",
+                ]
+            ),
+        )
 
     def test_all_antennas_full_exp(self):
-        self.assertEqual(sorted(self.full_exp.all_antennas),
-                         sorted(['1_ecohab_1', '2_ecohab_1',
-                                 '3_ecohab_1', '4_ecohab_1',
-                                 '5_ecohab_2', '6_ecohab_2',
-                                 '7_ecohab_2', '8_ecohab_2']))
+        self.assertEqual(
+            sorted(self.full_exp.all_antennas),
+            sorted(
+                [
+                    "1_ecohab_1",
+                    "2_ecohab_1",
+                    "3_ecohab_1",
+                    "4_ecohab_1",
+                    "5_ecohab_2",
+                    "6_ecohab_2",
+                    "7_ecohab_2",
+                    "8_ecohab_2",
+                ]
+            ),
+        )
 
     def test_all_cages(self):
-        self.assertEqual(sorted(self.experiment_config.cages),
-                         sorted(["shared cage 1", "ecohab1 cage B",
-                                 "cage C", "ecohab1 cage D",
-                                 "ecohab2 cage A"]))
+        self.assertEqual(
+            sorted(self.experiment_config.cages),
+            sorted(
+                [
+                    "shared cage 1",
+                    "ecohab1 cage B",
+                    "cage C",
+                    "ecohab1 cage D",
+                    "ecohab2 cage A",
+                ]
+            ),
+        )
 
     def test_all_cages_full_exp(self):
-        self.assertEqual(sorted(self.full_exp.cages),
-                         sorted(["cage A", "cage C",
-                                 "ecohab_1 cage B", "ecohab_2 cage D"]))
+        self.assertEqual(
+            sorted(self.full_exp.cages),
+            sorted(["cage A", "cage C", "ecohab_1 cage B", "ecohab_2 cage D"]),
+        )
 
     def test_all_tunnels(self):
-        self.assertEqual(sorted(["ecohab1 tunnel 1", "ecohab1 tunnel 2",
-                                 "ecohab1 tunnel 3", "ecohab1 tunnel 4",
-                                 "ecohab2 tunnel 1"]),
-                         sorted(self.experiment_config.tunnels))
+        self.assertEqual(
+            sorted(
+                [
+                    "ecohab1 tunnel 1",
+                    "ecohab1 tunnel 2",
+                    "ecohab1 tunnel 3",
+                    "ecohab1 tunnel 4",
+                    "ecohab2 tunnel 1",
+                ]
+            ),
+            sorted(self.experiment_config.tunnels),
+        )
 
     def test_all_tunnels_full_exp(self):
-        self.assertEqual(sorted(["ecohab_1 tunnel 1", "ecohab_1 tunnel 2",
-                                 "ecohab_2 tunnel 1", "ecohab_2 tunnel 2"]),
-                         sorted(self.full_exp.tunnels))
+        self.assertEqual(
+            sorted(
+                [
+                    "ecohab_1 tunnel 1",
+                    "ecohab_1 tunnel 2",
+                    "ecohab_2 tunnel 1",
+                    "ecohab_2 tunnel 2",
+                ]
+            ),
+            sorted(self.full_exp.tunnels),
+        )
 
     def test_get_cages_dict_1(self):
         key = "shared cage 1"
         out = sorted(["8_ecohab1", "8_ecohab2", "1_ecohab1", "2_ecohab2"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.experiment_config.cages_dict[key]), out)
 
     def test_get_cages_dict_2(self):
         key = "ecohab1 cage B"
         out = sorted(["2_ecohab1", "3_ecohab1"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.experiment_config.cages_dict[key]), out)
 
     def test_get_cages_dict_3(self):
         key = "cage C"
         out = sorted(["4_ecohab1", "5_ecohab1"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.experiment_config.cages_dict[key]), out)
 
     def test_get_cages_dict_4(self):
         key = "ecohab1 cage D"
         out = sorted(["6_ecohab1", "7_ecohab1"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.experiment_config.cages_dict[key]), out)
 
     def test_get_cages_dict_5(self):
         key = "ecohab2 cage A"
         out = sorted(["1_ecohab2"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.experiment_config.cages_dict[key]), out)
 
     def test_get_cages_dict_keys(self):
-        keys = sorted(["shared cage 1", "ecohab1 cage B", "cage C",
-                       "ecohab1 cage D", "ecohab2 cage A"])
-        self.assertEqual(sorted(self.experiment_config.cages_dict.keys()),
-                         keys)
+        keys = sorted(
+            [
+                "shared cage 1",
+                "ecohab1 cage B",
+                "cage C",
+                "ecohab1 cage D",
+                "ecohab2 cage A",
+            ]
+        )
+        self.assertEqual(sorted(self.experiment_config.cages_dict.keys()), keys)
 
     def test_get_cages_dict_full_exp_1(self):
         key = "cage A"
         out = sorted(["1_ecohab_1", "8_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.cages_dict[key]), out)
 
     def test_get_cages_dict_full_exp_2(self):
         key = "ecohab_1 cage B"
         out = sorted(["2_ecohab_1", "3_ecohab_1"])
-        self.assertEqual(sorted(self.full_exp.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.cages_dict[key]), out)
 
     def test_get_cages_dict_full_exp_3(self):
         key = "ecohab_2 cage D"
         out = sorted(["6_ecohab_2", "7_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.cages_dict[key]), out)
 
     def test_get_cages_dict_full_exp_4(self):
         key = "cage C"
         out = sorted(["4_ecohab_1", "5_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.cages_dict[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.cages_dict[key]), out)
 
     def test_get_cages_dict_full_exp_keys(self):
-        keys = sorted(["cage A", "ecohab_1 cage B", "cage C",
-                       "ecohab_2 cage D"])
+        keys = sorted(["cage A", "ecohab_1 cage B", "cage C", "ecohab_2 cage D"])
 
-        self.assertEqual(sorted(self.full_exp.cages_dict.keys()),
-                         keys)
+        self.assertEqual(sorted(self.full_exp.cages_dict.keys()), keys)
 
     def test_internal_antennas(self):
-        self.assertEqual(self.experiment_config.internal_antennas,
-                         ["8_ecohab2"])
+        self.assertEqual(self.experiment_config.internal_antennas, ["8_ecohab2"])
 
     def test_internal_antennas_full_exp(self):
-        self.assertEqual(self.full_exp.internal_antennas,
-                         [])
+        self.assertEqual(self.full_exp.internal_antennas, [])
 
     def test_tunnels_dict_keys(self):
-        keys = sorted(["ecohab1 tunnel 1", "ecohab1 tunnel 2",
-                       "ecohab1 tunnel 3", "ecohab1 tunnel 4",
-                       "ecohab2 tunnel 1"])
+        keys = sorted(
+            [
+                "ecohab1 tunnel 1",
+                "ecohab1 tunnel 2",
+                "ecohab1 tunnel 3",
+                "ecohab1 tunnel 4",
+                "ecohab2 tunnel 1",
+            ]
+        )
         act_keys = sorted(self.experiment_config.tunnels_dict.keys())
         self.assertEqual(keys, act_keys)
 
     def test_tunnels_dict_1(self):
         key = "ecohab1 tunnel 1"
         out = sorted(["1_ecohab1", "2_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.experiment_config.tunnels_dict[key]))
 
     def test_tunnels_dict_2(self):
         key = "ecohab1 tunnel 2"
         out = sorted(["3_ecohab1", "4_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.experiment_config.tunnels_dict[key]))
 
     def test_tunnels_dict_3(self):
         key = "ecohab1 tunnel 3"
         out = sorted(["5_ecohab1", "6_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.experiment_config.tunnels_dict[key]))
 
     def test_tunnels_dict_4(self):
         key = "ecohab1 tunnel 4"
         out = sorted(["7_ecohab1", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.experiment_config.tunnels_dict[key]))
 
     def test_tunnels_dict_5(self):
         key = "ecohab2 tunnel 1"
         out = sorted(["1_ecohab2", "2_ecohab2"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.experiment_config.tunnels_dict[key]))
 
     def test_tunnels_dict_keys_full_exp(self):
-        keys = sorted(["ecohab_1 tunnel 1", "ecohab_1 tunnel 2",
-                       "ecohab_2 tunnel 1", "ecohab_2 tunnel 2"])
+        keys = sorted(
+            [
+                "ecohab_1 tunnel 1",
+                "ecohab_1 tunnel 2",
+                "ecohab_2 tunnel 1",
+                "ecohab_2 tunnel 2",
+            ]
+        )
         act_keys = sorted(self.full_exp.tunnels_dict.keys())
         self.assertEqual(keys, act_keys)
 
     def test_tunnels_dict_full_exp_1(self):
         key = "ecohab_1 tunnel 1"
         out = sorted(["1_ecohab_1", "2_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.full_exp.tunnels_dict[key]))
 
     def test_tunnels_dict_full_exp_2(self):
         key = "ecohab_1 tunnel 2"
         out = sorted(["3_ecohab_1", "4_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.full_exp.tunnels_dict[key]))
 
     def test_tunnels_dict_full_exp_3(self):
         key = "ecohab_2 tunnel 2"
         out = sorted(["5_ecohab_2", "6_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.full_exp.tunnels_dict[key]))
 
     def test_tunnels_dict_full_exp_4(self):
         key = "ecohab_2 tunnel 1"
         out = sorted(["7_ecohab_2", "8_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.tunnels_dict[key]))
+        self.assertEqual(out, sorted(self.full_exp.tunnels_dict[key]))
 
     def test_same_tunnel_keys(self):
-        keys = sorted(set(self.experiment_config.all_antennas) -
-                      set(self.experiment_config.internal_antennas))
-        self.assertEqual(keys,
-                         sorted(self.experiment_config.same_tunnel.keys()))
+        keys = sorted(
+            set(self.experiment_config.all_antennas)
+            - set(self.experiment_config.internal_antennas)
+        )
+        self.assertEqual(keys, sorted(self.experiment_config.same_tunnel.keys()))
 
     def test_same_tunnel_1(self):
         key = "1_ecohab1"
         out = sorted(["1_ecohab1", "2_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_2(self):
         key = "2_ecohab1"
         out = sorted(["1_ecohab1", "2_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_3(self):
         key = "3_ecohab1"
         out = sorted(["3_ecohab1", "4_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_4(self):
         key = "4_ecohab1"
         out = sorted(["3_ecohab1", "4_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_5(self):
         key = "5_ecohab1"
         out = sorted(["5_ecohab1", "6_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_6(self):
         key = "6_ecohab1"
         out = sorted(["5_ecohab1", "6_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_7(self):
         key = "7_ecohab1"
         out = sorted(["7_ecohab1", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_8(self):
         key = "8_ecohab1"
         out = sorted(["7_ecohab1", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_9(self):
         key = "1_ecohab2"
         out = sorted(["1_ecohab2", "2_ecohab2"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_10(self):
         key = "2_ecohab2"
         out = sorted(["1_ecohab2", "2_ecohab2"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_tunnel[key]))
 
     def test_same_tunnel_keys_full_exp(self):
-        keys = sorted(set(self.full_exp.all_antennas) -
-                      set(self.full_exp.internal_antennas))
-        self.assertEqual(keys,
-                         sorted(self.full_exp.same_tunnel.keys()))
+        keys = sorted(
+            set(self.full_exp.all_antennas) - set(self.full_exp.internal_antennas)
+        )
+        self.assertEqual(keys, sorted(self.full_exp.same_tunnel.keys()))
 
     def test_same_tunnel_full_exp_1(self):
         key = "1_ecohab_1"
         out = sorted(["1_ecohab_1", "2_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_2(self):
         key = "2_ecohab_1"
         out = sorted(["1_ecohab_1", "2_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_3(self):
         key = "3_ecohab_1"
         out = sorted(["3_ecohab_1", "4_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_4(self):
         key = "4_ecohab_1"
         out = sorted(["3_ecohab_1", "4_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_5(self):
         key = "5_ecohab_2"
         out = sorted(["5_ecohab_2", "6_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_6(self):
         key = "6_ecohab_2"
         out = sorted(["5_ecohab_2", "6_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_7(self):
         key = "7_ecohab_2"
         out = sorted(["7_ecohab_2", "8_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_tunnel_full_exp_8(self):
         key = "8_ecohab_2"
         out = sorted(["7_ecohab_2", "8_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_tunnel[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_tunnel[key]))
 
     def test_same_address_keys(self):
-        self.assertEqual(sorted(self.experiment_config.all_antennas),
-                         sorted(self.experiment_config.same_address.keys()))
+        self.assertEqual(
+            sorted(self.experiment_config.all_antennas),
+            sorted(self.experiment_config.same_address.keys()),
+        )
 
     def test_same_address_11(self):
         key = "1_ecohab1"
         out = sorted(["1_ecohab1", "8_ecohab2", "2_ecohab2", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_81(self):
         key = "8_ecohab1"
         out = sorted(["1_ecohab1", "8_ecohab2", "2_ecohab2", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_22(self):
         key = "2_ecohab2"
         out = sorted(["1_ecohab1", "8_ecohab2", "2_ecohab2", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_82(self):
         key = "8_ecohab2"
         out = sorted(["1_ecohab1", "8_ecohab2", "2_ecohab2", "8_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_21(self):
         key = "2_ecohab1"
         out = sorted(["2_ecohab1", "3_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_31(self):
         key = "3_ecohab1"
         out = sorted(["2_ecohab1", "3_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_41(self):
         key = "4_ecohab1"
         out = sorted(["4_ecohab1", "5_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_51(self):
         key = "5_ecohab1"
         out = sorted(["4_ecohab1", "5_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_61(self):
         key = "6_ecohab1"
         out = sorted(["6_ecohab1", "7_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_71(self):
         key = "7_ecohab1"
         out = sorted(["6_ecohab1", "7_ecohab1"])
-        self.assertEqual(out,
-                         sorted(self.experiment_config.same_address[key]))
+        self.assertEqual(out, sorted(self.experiment_config.same_address[key]))
 
     def test_same_address_full_exp_keys(self):
         keys = sorted(self.full_exp.all_antennas)
-        self.assertEqual(keys,
-                         sorted(self.full_exp.same_address.keys()))
+        self.assertEqual(keys, sorted(self.full_exp.same_address.keys()))
 
     def test_same_address_full_exp_82(self):
         key = "8_ecohab_2"
         out = sorted(["8_ecohab_2", "1_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_11(self):
         key = "1_ecohab_1"
         out = sorted(["8_ecohab_2", "1_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_21(self):
         key = "2_ecohab_1"
         out = sorted(["2_ecohab_1", "3_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_31(self):
         key = "3_ecohab_1"
         out = sorted(["2_ecohab_1", "3_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_41(self):
         key = "4_ecohab_1"
         out = sorted(["4_ecohab_1", "5_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_52(self):
         key = "5_ecohab_2"
         out = sorted(["5_ecohab_2", "4_ecohab_1"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_62(self):
         key = "6_ecohab_2"
         out = sorted(["6_ecohab_2", "7_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_same_address_full_exp_72(self):
         key = "7_ecohab_2"
         out = sorted(["6_ecohab_2", "7_ecohab_2"])
-        self.assertEqual(out,
-                         sorted(self.full_exp.same_address[key]))
+        self.assertEqual(out, sorted(self.full_exp.same_address[key]))
 
     def test_opposite_tunnel_dict_full_exp_keys(self):
-        self.assertEqual(sorted(self.full_exp.all_antennas),
-                         sorted(self.full_exp.opposite_tunnel.keys()))
+        self.assertEqual(
+            sorted(self.full_exp.all_antennas),
+            sorted(self.full_exp.opposite_tunnel.keys()),
+        )
 
     def test_opposite_tunnel_dict_keys(self):
-        keys = set(self.experiment_config.all_antennas)\
-               - set(self.experiment_config.internal_antennas)
-        self.assertEqual(sorted(keys),
-                         sorted(self.experiment_config.opposite_tunnel.keys()))
+        keys = set(self.experiment_config.all_antennas) - set(
+            self.experiment_config.internal_antennas
+        )
+        self.assertEqual(
+            sorted(keys), sorted(self.experiment_config.opposite_tunnel.keys())
+        )
 
     def test_opposite_tunnel_full_exp_1(self):
         key = "1_ecohab_1"
         out = sorted(["5_ecohab_2", "6_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_2(self):
         key = "2_ecohab_1"
         out = sorted(["5_ecohab_2", "6_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_5(self):
         key = "5_ecohab_2"
         out = sorted(["1_ecohab_1", "2_ecohab_1"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_6(self):
         key = "6_ecohab_2"
         out = sorted(["1_ecohab_1", "2_ecohab_1"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_3(self):
         key = "3_ecohab_1"
         out = sorted(["7_ecohab_2", "8_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_4(self):
         key = "4_ecohab_1"
         out = sorted(["7_ecohab_2", "8_ecohab_2"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_7(self):
         key = "7_ecohab_2"
         out = sorted(["3_ecohab_1", "4_ecohab_1"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_full_exp_8(self):
         key = "8_ecohab_2"
         out = sorted(["3_ecohab_1", "4_ecohab_1"])
-        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]),
-                         out)
+        self.assertEqual(sorted(self.full_exp.opposite_tunnel[key]), out)
 
     def test_opposite_tunnel_12(self):
         key = "1_ecohab2"
@@ -1004,8 +1041,7 @@ class TestExperimentSetupConfig(unittest.TestCase):
         out["5_ecohab_2"] = "cage C"
         out["6_ecohab_2"] = "ecohab_2 cage D"
         out["7_ecohab_2"] = "ecohab_2 cage D"
-        self.assertEqual(out,
-                         self.full_exp.address)
+        self.assertEqual(out, self.full_exp.address)
 
     def test_address_non_adjacent_full_exp(self):
         out = {
@@ -1016,7 +1052,7 @@ class TestExperimentSetupConfig(unittest.TestCase):
             "5_ecohab_2": "ecohab_2 cage D",
             "6_ecohab_2": "cage C",
             "7_ecohab_2": "cage A",
-            "8_ecohab_2": "ecohab_2 cage D"
+            "8_ecohab_2": "ecohab_2 cage D",
         }
         self.assertEqual(out, self.full_exp.address_non_adjacent)
 
@@ -1046,8 +1082,7 @@ class TestExperimentSetupConfig(unittest.TestCase):
             ("5_ecohab_2", "7_ecohab_2"): "ecohab_2 cage D",
             ("6_ecohab_2", "8_ecohab_2"): "ecohab_2 cage D",
         }
-        self.assertEqual(out,
-                         self.full_exp.address_surrounding)
+        self.assertEqual(out, self.full_exp.address_surrounding)
 
     def test_address_surrounding(self):
         out = {
@@ -1063,24 +1098,37 @@ class TestExperimentSetupConfig(unittest.TestCase):
             ("4_ecohab1", "6_ecohab1"): "cage C",
             ("5_ecohab1", "7_ecohab1"): "ecohab1 cage D",
             ("6_ecohab1", "8_ecohab1"): "ecohab1 cage D",
-            }
+        }
 
     def test_directions_full_exp(self):
         out = sorted(
-            ['1_ecohab_1 2_ecohab_1', '2_ecohab_1 1_ecohab_1',
-             '3_ecohab_1 4_ecohab_1', '4_ecohab_1 3_ecohab_1',
-             '5_ecohab_2 6_ecohab_2', '6_ecohab_2 5_ecohab_2',
-             '7_ecohab_2 8_ecohab_2', '8_ecohab_2 7_ecohab_2']
+            [
+                "1_ecohab_1 2_ecohab_1",
+                "2_ecohab_1 1_ecohab_1",
+                "3_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 3_ecohab_1",
+                "5_ecohab_2 6_ecohab_2",
+                "6_ecohab_2 5_ecohab_2",
+                "7_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 7_ecohab_2",
+            ]
         )
         self.assertEqual(self.full_exp.directions, out)
 
     def test_directions(self):
         out = sorted(
-            ['1_ecohab1 2_ecohab1', '2_ecohab1 1_ecohab1',
-             '1_ecohab2 2_ecohab2', '2_ecohab2 1_ecohab2',
-             '3_ecohab1 4_ecohab1', '4_ecohab1 3_ecohab1',
-             '5_ecohab1 6_ecohab1', '6_ecohab1 5_ecohab1',
-             '7_ecohab1 8_ecohab1', '8_ecohab1 7_ecohab1']
+            [
+                "1_ecohab1 2_ecohab1",
+                "2_ecohab1 1_ecohab1",
+                "1_ecohab2 2_ecohab2",
+                "2_ecohab2 1_ecohab2",
+                "3_ecohab1 4_ecohab1",
+                "4_ecohab1 3_ecohab1",
+                "5_ecohab1 6_ecohab1",
+                "6_ecohab1 5_ecohab1",
+                "7_ecohab1 8_ecohab1",
+                "8_ecohab1 7_ecohab1",
+            ]
         )
         self.assertEqual(self.experiment_config.directions, out)
 
@@ -1099,8 +1147,7 @@ class TestExperimentSetupConfig(unittest.TestCase):
         out = set()
         for antenna1 in self.exp_i_antennas.all_antennas:
             for antenna2 in self.exp_i_antennas.all_antennas:
-                key = "%s %s" % (min(antenna1, antenna2),
-                                 max(antenna1, antenna2))
+                key = "%s %s" % (min(antenna1, antenna2), max(antenna1, antenna2))
                 out.add(key)
         self.assertEqual(sorted(out), self.exp_i_antennas.all_unique_pairs)
 
@@ -1108,8 +1155,7 @@ class TestExperimentSetupConfig(unittest.TestCase):
         out = set()
         for antenna1 in self.full_exp.all_antennas:
             for antenna2 in self.full_exp.all_antennas:
-                key = "%s %s" % (min(antenna1, antenna2),
-                                 max(antenna1, antenna2))
+                key = "%s %s" % (min(antenna1, antenna2), max(antenna1, antenna2))
                 out.add(key)
         self.assertEqual(sorted(out), self.full_exp.all_unique_pairs)
 
@@ -1130,251 +1176,435 @@ class TestExperimentSetupConfig(unittest.TestCase):
         self.assertEqual(sorted(out), self.full_exp.all_pairs)
 
     def test_mismatched_antennas_full(self):
-        out = ["1_ecohab_1 3_ecohab_1", "1_ecohab_1 4_ecohab_1",
-               "1_ecohab_1 5_ecohab_2", "1_ecohab_1 6_ecohab_2",
-               "1_ecohab_1 7_ecohab_2", "2_ecohab_1 4_ecohab_1",
-               "2_ecohab_1 5_ecohab_2", "2_ecohab_1 6_ecohab_2",
-               "2_ecohab_1 7_ecohab_2", "2_ecohab_1 8_ecohab_2",
-               "3_ecohab_1 5_ecohab_2", "3_ecohab_1 6_ecohab_2",
-               "3_ecohab_1 7_ecohab_2", "3_ecohab_1 8_ecohab_2",
-               "4_ecohab_1 6_ecohab_2", "4_ecohab_1 7_ecohab_2",
-               "4_ecohab_1 8_ecohab_2", "5_ecohab_2 7_ecohab_2",
-               "5_ecohab_2 8_ecohab_2", "6_ecohab_2 8_ecohab_2"]
-        self.assertEqual(sorted(out),
-                         self.full_exp.mismatched_pairs)
+        out = [
+            "1_ecohab_1 3_ecohab_1",
+            "1_ecohab_1 4_ecohab_1",
+            "1_ecohab_1 5_ecohab_2",
+            "1_ecohab_1 6_ecohab_2",
+            "1_ecohab_1 7_ecohab_2",
+            "2_ecohab_1 4_ecohab_1",
+            "2_ecohab_1 5_ecohab_2",
+            "2_ecohab_1 6_ecohab_2",
+            "2_ecohab_1 7_ecohab_2",
+            "2_ecohab_1 8_ecohab_2",
+            "3_ecohab_1 5_ecohab_2",
+            "3_ecohab_1 6_ecohab_2",
+            "3_ecohab_1 7_ecohab_2",
+            "3_ecohab_1 8_ecohab_2",
+            "4_ecohab_1 6_ecohab_2",
+            "4_ecohab_1 7_ecohab_2",
+            "4_ecohab_1 8_ecohab_2",
+            "5_ecohab_2 7_ecohab_2",
+            "5_ecohab_2 8_ecohab_2",
+            "6_ecohab_2 8_ecohab_2",
+        ]
+        self.assertEqual(sorted(out), self.full_exp.mismatched_pairs)
 
     def test_mismatched_antennas_2(self):
-        out = ["1_custom2 8_custom2", "1_custom2 1_default1",
-               "1_custom2 2_default1", "1_custom2 3_default1",
-               "1_custom2 4_default1", "1_custom2 5_default1",
-               "1_custom2 6_default1", "1_custom2 7_default1",
-               "1_custom2 8_default1",
-               "1_default1 3_default1", "1_default1 4_default1",
-               "1_default1 5_default1", "1_default1 6_default1",
-               "1_default1 7_default1", "1_default1 7_custom2",
-               "2_custom2 2_default1",
-               "2_custom2 4_default1", "2_custom2 3_default1",
-               "2_custom2 5_default1", "2_custom2 6_default1",
-               "2_custom2 7_custom2", "2_custom2 7_default1",
-               "2_default1 4_default1", "2_default1 5_default1",
-               "2_default1 6_default1", "2_default1 7_custom2",
-               "2_default1 7_default1", "2_default1 8_default1",
-               "2_default1 8_custom2",
-               "3_default1 5_default1", "3_default1 6_default1",
-               "3_default1 7_default1", "3_default1 8_default1",
-               "3_default1 7_custom2", "3_default1 8_custom2",
-               "4_default1 6_default1", "4_default1 7_default1",
-               "4_default1 8_default1", "4_default1 8_custom2",
-               "4_default1 7_custom2",  "5_default1 7_default1",
-               "5_default1 8_default1", "5_default1 8_custom2",
-               "5_default1 7_custom2",  "6_default1 8_default1",
-               "6_default1 8_custom2", "7_custom2 7_default1",
-               "7_custom2 8_custom2", "7_custom2 8_default1",
-               "6_default1 7_custom2", "7_default1 8_custom2"]
-        self.assertEqual(sorted(out),
-                         self.exp_i_antennas.mismatched_pairs)
+        out = [
+            "1_custom2 8_custom2",
+            "1_custom2 1_default1",
+            "1_custom2 2_default1",
+            "1_custom2 3_default1",
+            "1_custom2 4_default1",
+            "1_custom2 5_default1",
+            "1_custom2 6_default1",
+            "1_custom2 7_default1",
+            "1_custom2 8_default1",
+            "1_default1 3_default1",
+            "1_default1 4_default1",
+            "1_default1 5_default1",
+            "1_default1 6_default1",
+            "1_default1 7_default1",
+            "1_default1 7_custom2",
+            "2_custom2 2_default1",
+            "2_custom2 4_default1",
+            "2_custom2 3_default1",
+            "2_custom2 5_default1",
+            "2_custom2 6_default1",
+            "2_custom2 7_custom2",
+            "2_custom2 7_default1",
+            "2_default1 4_default1",
+            "2_default1 5_default1",
+            "2_default1 6_default1",
+            "2_default1 7_custom2",
+            "2_default1 7_default1",
+            "2_default1 8_default1",
+            "2_default1 8_custom2",
+            "3_default1 5_default1",
+            "3_default1 6_default1",
+            "3_default1 7_default1",
+            "3_default1 8_default1",
+            "3_default1 7_custom2",
+            "3_default1 8_custom2",
+            "4_default1 6_default1",
+            "4_default1 7_default1",
+            "4_default1 8_default1",
+            "4_default1 8_custom2",
+            "4_default1 7_custom2",
+            "5_default1 7_default1",
+            "5_default1 8_default1",
+            "5_default1 8_custom2",
+            "5_default1 7_custom2",
+            "6_default1 8_default1",
+            "6_default1 8_custom2",
+            "7_custom2 7_default1",
+            "7_custom2 8_custom2",
+            "7_custom2 8_default1",
+            "6_default1 7_custom2",
+            "7_default1 8_custom2",
+        ]
+        self.assertEqual(sorted(out), self.exp_i_antennas.mismatched_pairs)
 
     def test_allowed_pairs_full(self):
-        expected = sorted(["1_ecohab_1 8_ecohab_2", "1_ecohab_1 1_ecohab_1",
-                           "1_ecohab_1 2_ecohab_1", "2_ecohab_1 1_ecohab_1",
-                           "2_ecohab_1 2_ecohab_1", "2_ecohab_1 3_ecohab_1",
-                           "3_ecohab_1 2_ecohab_1", "3_ecohab_1 3_ecohab_1",
-                           "3_ecohab_1 4_ecohab_1", "4_ecohab_1 3_ecohab_1",
-                           "4_ecohab_1 4_ecohab_1", "4_ecohab_1 5_ecohab_2",
-                           "5_ecohab_2 4_ecohab_1", "5_ecohab_2 5_ecohab_2",
-                           "5_ecohab_2 6_ecohab_2", "6_ecohab_2 5_ecohab_2",
-                           "6_ecohab_2 6_ecohab_2", "6_ecohab_2 7_ecohab_2",
-                           "7_ecohab_2 6_ecohab_2", "7_ecohab_2 7_ecohab_2",
-                           "7_ecohab_2 8_ecohab_2", "8_ecohab_2 7_ecohab_2",
-                           "8_ecohab_2 8_ecohab_2", "8_ecohab_2 1_ecohab_1", ])
+        expected = sorted(
+            [
+                "1_ecohab_1 8_ecohab_2",
+                "1_ecohab_1 1_ecohab_1",
+                "1_ecohab_1 2_ecohab_1",
+                "2_ecohab_1 1_ecohab_1",
+                "2_ecohab_1 2_ecohab_1",
+                "2_ecohab_1 3_ecohab_1",
+                "3_ecohab_1 2_ecohab_1",
+                "3_ecohab_1 3_ecohab_1",
+                "3_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 3_ecohab_1",
+                "4_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 5_ecohab_2",
+                "5_ecohab_2 4_ecohab_1",
+                "5_ecohab_2 5_ecohab_2",
+                "5_ecohab_2 6_ecohab_2",
+                "6_ecohab_2 5_ecohab_2",
+                "6_ecohab_2 6_ecohab_2",
+                "6_ecohab_2 7_ecohab_2",
+                "7_ecohab_2 6_ecohab_2",
+                "7_ecohab_2 7_ecohab_2",
+                "7_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 7_ecohab_2",
+                "8_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 1_ecohab_1",
+            ]
+        )
         calc = self.full_exp.allowed_pairs()
         self.assertEqual(expected, calc)
 
     def test_allowed_pairs_2(self):
-        expected = sorted(["1_default1 8_default1", "1_default1 1_default1",
-                           "1_default1 2_default1", "2_default1 1_default1",
-                           "2_default1 2_default1", "2_default1 3_default1",
-                           "3_default1 2_default1", "3_default1 3_default1",
-                           "3_default1 4_default1", "4_default1 3_default1",
-                           "4_default1 4_default1", "4_default1 5_default1",
-                           "5_default1 4_default1", "5_default1 5_default1",
-                           "5_default1 6_default1", "6_default1 5_default1",
-                           "6_default1 6_default1", "6_default1 7_default1",
-                           "7_default1 6_default1", "7_default1 7_default1",
-                           "7_default1 8_default1", "8_default1 7_default1",
-                           "8_default1 8_default1", "8_default1 1_default1",
-                           "8_custom2 8_custom2", "8_custom2 1_default1",
-                           "1_default1 8_custom2", "8_custom2 8_default1",
-                           "8_default1 8_custom2", "8_custom2 2_custom2",
-                           "2_custom2 8_custom2", "2_custom2 2_custom2",
-                           "2_custom2 1_custom2", "1_custom2 1_custom2",
-                           "1_custom2 7_custom2", "7_custom2 1_custom2",
-                           "7_custom2 7_custom2", "1_custom2 2_custom2",
-                           "2_custom2 8_default1", "2_custom2 1_default1",
-                           "8_default1 2_custom2", "1_default1 2_custom2"])
+        expected = sorted(
+            [
+                "1_default1 8_default1",
+                "1_default1 1_default1",
+                "1_default1 2_default1",
+                "2_default1 1_default1",
+                "2_default1 2_default1",
+                "2_default1 3_default1",
+                "3_default1 2_default1",
+                "3_default1 3_default1",
+                "3_default1 4_default1",
+                "4_default1 3_default1",
+                "4_default1 4_default1",
+                "4_default1 5_default1",
+                "5_default1 4_default1",
+                "5_default1 5_default1",
+                "5_default1 6_default1",
+                "6_default1 5_default1",
+                "6_default1 6_default1",
+                "6_default1 7_default1",
+                "7_default1 6_default1",
+                "7_default1 7_default1",
+                "7_default1 8_default1",
+                "8_default1 7_default1",
+                "8_default1 8_default1",
+                "8_default1 1_default1",
+                "8_custom2 8_custom2",
+                "8_custom2 1_default1",
+                "1_default1 8_custom2",
+                "8_custom2 8_default1",
+                "8_default1 8_custom2",
+                "8_custom2 2_custom2",
+                "2_custom2 8_custom2",
+                "2_custom2 2_custom2",
+                "2_custom2 1_custom2",
+                "1_custom2 1_custom2",
+                "1_custom2 7_custom2",
+                "7_custom2 1_custom2",
+                "7_custom2 7_custom2",
+                "1_custom2 2_custom2",
+                "2_custom2 8_default1",
+                "2_custom2 1_default1",
+                "8_default1 2_custom2",
+                "1_default1 2_custom2",
+            ]
+        )
         calc = self.exp_i_antennas.allowed_pairs()
         self.assertEqual(expected, calc)
 
     def test_skipped_one_full(self):
-        expected = sorted(["1_ecohab_1 3_ecohab_1", "3_ecohab_1 1_ecohab_1",
-                           "1_ecohab_1 7_ecohab_2", "7_ecohab_2 1_ecohab_1",
-                           "2_ecohab_1 4_ecohab_1", "4_ecohab_1 2_ecohab_1",
-                           "2_ecohab_1 8_ecohab_2", "8_ecohab_2 2_ecohab_1",
-                           "3_ecohab_1 5_ecohab_2", "5_ecohab_2 3_ecohab_1",
-                           "4_ecohab_1 6_ecohab_2", "6_ecohab_2 4_ecohab_1",
-                           "6_ecohab_2 8_ecohab_2", "8_ecohab_2 6_ecohab_2",
-                           "5_ecohab_2 7_ecohab_2", "7_ecohab_2 5_ecohab_2"])
+        expected = sorted(
+            [
+                "1_ecohab_1 3_ecohab_1",
+                "3_ecohab_1 1_ecohab_1",
+                "1_ecohab_1 7_ecohab_2",
+                "7_ecohab_2 1_ecohab_1",
+                "2_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 2_ecohab_1",
+                "2_ecohab_1 8_ecohab_2",
+                "8_ecohab_2 2_ecohab_1",
+                "3_ecohab_1 5_ecohab_2",
+                "5_ecohab_2 3_ecohab_1",
+                "4_ecohab_1 6_ecohab_2",
+                "6_ecohab_2 4_ecohab_1",
+                "6_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 6_ecohab_2",
+                "5_ecohab_2 7_ecohab_2",
+                "7_ecohab_2 5_ecohab_2",
+            ]
+        )
         calculated = self.full_exp.skipped_one()
         self.assertEqual(expected, calculated)
 
     def test_skipped_one_2(self):
-        expected = sorted(["1_default1 3_default1", "3_default1 1_default1",
-                           "1_default1 7_default1", "7_default1 1_default1",
-                           "2_default1 4_default1", "4_default1 2_default1",
-                           "2_default1 8_default1", "8_default1 2_default1",
-                           "3_default1 5_default1", "5_default1 3_default1",
-                           "4_default1 6_default1", "6_default1 4_default1",
-                           "6_default1 8_default1", "8_default1 6_default1",
-                           "5_default1 7_default1", "7_default1 5_default1",
-                           "7_custom2 2_custom2", "2_custom2 7_custom2",
-                           "1_custom2 8_custom2", "8_custom2 1_custom2",
-                           "1_custom2 8_default1", "8_default1 1_custom2",
-                           "1_custom2 1_default1", "1_default1 1_custom2",
-                           "2_custom2 2_default1", "2_default1 2_custom2",
-                           "2_custom2 7_default1", "7_default1 2_custom2",
-                           "8_custom2 7_default1", "7_default1 8_custom2",
-                           "8_custom2 2_default1", "2_default1 8_custom2"])
+        expected = sorted(
+            [
+                "1_default1 3_default1",
+                "3_default1 1_default1",
+                "1_default1 7_default1",
+                "7_default1 1_default1",
+                "2_default1 4_default1",
+                "4_default1 2_default1",
+                "2_default1 8_default1",
+                "8_default1 2_default1",
+                "3_default1 5_default1",
+                "5_default1 3_default1",
+                "4_default1 6_default1",
+                "6_default1 4_default1",
+                "6_default1 8_default1",
+                "8_default1 6_default1",
+                "5_default1 7_default1",
+                "7_default1 5_default1",
+                "7_custom2 2_custom2",
+                "2_custom2 7_custom2",
+                "1_custom2 8_custom2",
+                "8_custom2 1_custom2",
+                "1_custom2 8_default1",
+                "8_default1 1_custom2",
+                "1_custom2 1_default1",
+                "1_default1 1_custom2",
+                "2_custom2 2_default1",
+                "2_default1 2_custom2",
+                "2_custom2 7_default1",
+                "7_default1 2_custom2",
+                "8_custom2 7_default1",
+                "7_default1 8_custom2",
+                "8_custom2 2_default1",
+                "2_default1 8_custom2",
+            ]
+        )
         calculated = self.exp_i_antennas.skipped_one()
         self.assertEqual(expected, calculated)
 
     def test_skip_two(self):
-        expected = sorted(["1_ecohab_1 4_ecohab_1", "4_ecohab_1 1_ecohab_1",
-                           "1_ecohab_1 6_ecohab_2", "6_ecohab_2 1_ecohab_1",
-                           "2_ecohab_1 5_ecohab_2", "5_ecohab_2 2_ecohab_1",
-                           "2_ecohab_1 7_ecohab_2", "7_ecohab_2 2_ecohab_1",
-                           "3_ecohab_1 6_ecohab_2", "6_ecohab_2 3_ecohab_1",
-                           "3_ecohab_1 8_ecohab_2", "8_ecohab_2 3_ecohab_1",
-                           "4_ecohab_1 7_ecohab_2", "7_ecohab_2 4_ecohab_1",
-                           "5_ecohab_2 8_ecohab_2", "8_ecohab_2 5_ecohab_2",
-                           ])
+        expected = sorted(
+            [
+                "1_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 1_ecohab_1",
+                "1_ecohab_1 6_ecohab_2",
+                "6_ecohab_2 1_ecohab_1",
+                "2_ecohab_1 5_ecohab_2",
+                "5_ecohab_2 2_ecohab_1",
+                "2_ecohab_1 7_ecohab_2",
+                "7_ecohab_2 2_ecohab_1",
+                "3_ecohab_1 6_ecohab_2",
+                "6_ecohab_2 3_ecohab_1",
+                "3_ecohab_1 8_ecohab_2",
+                "8_ecohab_2 3_ecohab_1",
+                "4_ecohab_1 7_ecohab_2",
+                "7_ecohab_2 4_ecohab_1",
+                "5_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 5_ecohab_2",
+            ]
+        )
         calculated = self.full_exp.skipped_two()
         self.assertEqual(expected, calculated)
 
     def test_skip_more(self):
-        expected = sorted([
-            "1_ecohab_1 5_ecohab_2", "5_ecohab_2 1_ecohab_1",
-            "2_ecohab_1 6_ecohab_2", "6_ecohab_2 2_ecohab_1",
-            "3_ecohab_1 7_ecohab_2", "7_ecohab_2 3_ecohab_1",
-            "4_ecohab_1 8_ecohab_2", "8_ecohab_2 4_ecohab_1",
-        ])
+        expected = sorted(
+            [
+                "1_ecohab_1 5_ecohab_2",
+                "5_ecohab_2 1_ecohab_1",
+                "2_ecohab_1 6_ecohab_2",
+                "6_ecohab_2 2_ecohab_1",
+                "3_ecohab_1 7_ecohab_2",
+                "7_ecohab_2 3_ecohab_1",
+                "4_ecohab_1 8_ecohab_2",
+                "8_ecohab_2 4_ecohab_1",
+            ]
+        )
         calculated = self.full_exp.skipped_more()
         self.assertEqual(expected, calculated)
 
     def test_skip_two(self):
-        expected = sorted([
-            "1_default1 4_default1", "4_default1 1_default1",
-            "1_default1 6_default1", "6_default1 1_default1",
-            "2_default1 5_default1", "5_default1 2_default1",
-            "2_default1 7_default1", "7_default1 2_default1",
-            "3_default1 6_default1", "6_default1 3_default1",
-            "3_default1 8_default1", "8_default1 3_default1",
-            "4_default1 7_default1", "7_default1 4_default1",
-            "5_default1 8_default1", "8_default1 5_default1",
-            "7_custom2 8_custom2", "8_custom2 7_custom2",
-            "7_custom2 1_default1", "1_default1 7_custom2",
-            "7_custom2 8_default1", "8_default1 7_custom2",
-            "1_custom2 2_default1", "2_default1 1_custom2",
-            "1_custom2 7_default1", "7_default1 1_custom2",
-            "2_custom2 6_default1", "6_default1 2_custom2",
-            "2_custom2 3_default1", "3_default1 2_custom2",
-            "8_custom2 6_default1", "6_default1 8_custom2",
-            "8_custom2 3_default1", "3_default1 8_custom2",
-
-        ])
+        expected = sorted(
+            [
+                "1_default1 4_default1",
+                "4_default1 1_default1",
+                "1_default1 6_default1",
+                "6_default1 1_default1",
+                "2_default1 5_default1",
+                "5_default1 2_default1",
+                "2_default1 7_default1",
+                "7_default1 2_default1",
+                "3_default1 6_default1",
+                "6_default1 3_default1",
+                "3_default1 8_default1",
+                "8_default1 3_default1",
+                "4_default1 7_default1",
+                "7_default1 4_default1",
+                "5_default1 8_default1",
+                "8_default1 5_default1",
+                "7_custom2 8_custom2",
+                "8_custom2 7_custom2",
+                "7_custom2 1_default1",
+                "1_default1 7_custom2",
+                "7_custom2 8_default1",
+                "8_default1 7_custom2",
+                "1_custom2 2_default1",
+                "2_default1 1_custom2",
+                "1_custom2 7_default1",
+                "7_default1 1_custom2",
+                "2_custom2 6_default1",
+                "6_default1 2_custom2",
+                "2_custom2 3_default1",
+                "3_default1 2_custom2",
+                "8_custom2 6_default1",
+                "6_default1 8_custom2",
+                "8_custom2 3_default1",
+                "3_default1 8_custom2",
+            ]
+        )
         calculated = self.exp_i_antennas.skipped_two()
         self.assertEqual(sorted(expected), calculated)
 
     def test_skipped_more_2(self):
-        allowed1 = sorted(["1_default1 3_default1", "3_default1 1_default1",
-                           "1_default1 7_default1", "7_default1 1_default1",
-                           "2_default1 4_default1", "4_default1 2_default1",
-                           "2_default1 8_default1", "8_default1 2_default1",
-                           "3_default1 5_default1", "5_default1 3_default1",
-                           "4_default1 6_default1", "6_default1 4_default1",
-                           "6_default1 8_default1", "8_default1 6_default1",
-                           "5_default1 7_default1", "7_default1 5_default1",
-                           "7_custom2 2_custom2", "2_custom2 7_custom2",
-                           "1_custom2 8_custom2", "8_custom2 1_custom2",
-                           "1_custom2 8_default1", "8_default1 1_custom2",
-                           "1_custom2 1_default1", "1_default1 1_custom2",
-                           "2_custom2 2_default1", "2_default1 2_custom2",
-                           "2_custom2 7_default1", "7_default1 2_custom2",
-                           "8_custom2 7_default1", "7_default1 8_custom2",
-                           "8_custom2 2_default1", "2_default1 8_custom2"])
-        allowed2 = sorted(["1_default1 8_default1",
-                           "1_default1 1_default1",
-                           "1_default1 2_default1",
-                           "2_default1 1_default1",
-                           "2_default1 2_default1",
-                           "2_default1 3_default1",
-                           "3_default1 2_default1",
-                           "3_default1 3_default1",
-                           "3_default1 4_default1",
-                           "4_default1 3_default1",
-                           "4_default1 4_default1",
-                           "4_default1 5_default1",
-                           "5_default1 4_default1",
-                           "5_default1 5_default1",
-                           "5_default1 6_default1",
-                           "6_default1 5_default1",
-                           "6_default1 6_default1",
-                           "6_default1 7_default1",
-                           "7_default1 6_default1",
-                           "7_default1 7_default1",
-                           "7_default1 8_default1",
-                           "8_default1 7_default1",
-                           "8_default1 8_default1",
-                           "8_default1 1_default1",
-                           "8_custom2 8_custom2",
-                           "8_custom2 1_default1",
-                           "1_default1 8_custom2",
-                           "8_custom2 8_default1",
-                           "8_default1 8_custom2",
-                           "8_custom2 2_custom2",
-                           "2_custom2 8_custom2",
-                           "2_custom2 2_custom2",
-                           "2_custom2 1_custom2",
-                           "1_custom2 1_custom2",
-                           "1_custom2 7_custom2",
-                           "7_custom2 1_custom2",
-                           "7_custom2 7_custom2",
-                           "1_custom2 2_custom2",
-                           "2_custom2 8_default1",
-                           "2_custom2 1_default1",
-                           "8_default1 2_custom2",
-                           "1_default1 2_custom2"])
-        allowed3 = sorted(["1_default1 4_default1",
-                           "4_default1 1_default1",
-                           "1_default1 6_default1",
-                           "6_default1 1_default1",
-                           "2_default1 5_default1",
-                           "5_default1 2_default1",
-                           "2_default1 7_default1",
-                           "7_default1 2_default1",
-                           "3_default1 6_default1",
-                           "6_default1 3_default1",
-                           "3_default1 8_default1", "8_default1 3_default1",
-                           "4_default1 7_default1", "7_default1 4_default1",
-                           "5_default1 8_default1", "8_default1 5_default1",
-                           "7_custom2 8_custom2", "8_custom2 7_custom2",
-                           "7_custom2 1_default1", "1_default1 7_custom2",
-                           "7_custom2 8_default1", "8_default1 7_custom2",
-                           "1_custom2 2_default1", "2_default1 1_custom2",
-                           "1_custom2 7_default1", "7_default1 1_custom2",
-                           "2_custom2 6_default1", "6_default1 2_custom2",
-                           "2_custom2 3_default1", "3_default1 2_custom2",
-                           "8_custom2 6_default1", "6_default1 8_custom2",
-                           "8_custom2 3_default1", "3_default1 8_custom2"])
+        allowed1 = sorted(
+            [
+                "1_default1 3_default1",
+                "3_default1 1_default1",
+                "1_default1 7_default1",
+                "7_default1 1_default1",
+                "2_default1 4_default1",
+                "4_default1 2_default1",
+                "2_default1 8_default1",
+                "8_default1 2_default1",
+                "3_default1 5_default1",
+                "5_default1 3_default1",
+                "4_default1 6_default1",
+                "6_default1 4_default1",
+                "6_default1 8_default1",
+                "8_default1 6_default1",
+                "5_default1 7_default1",
+                "7_default1 5_default1",
+                "7_custom2 2_custom2",
+                "2_custom2 7_custom2",
+                "1_custom2 8_custom2",
+                "8_custom2 1_custom2",
+                "1_custom2 8_default1",
+                "8_default1 1_custom2",
+                "1_custom2 1_default1",
+                "1_default1 1_custom2",
+                "2_custom2 2_default1",
+                "2_default1 2_custom2",
+                "2_custom2 7_default1",
+                "7_default1 2_custom2",
+                "8_custom2 7_default1",
+                "7_default1 8_custom2",
+                "8_custom2 2_default1",
+                "2_default1 8_custom2",
+            ]
+        )
+        allowed2 = sorted(
+            [
+                "1_default1 8_default1",
+                "1_default1 1_default1",
+                "1_default1 2_default1",
+                "2_default1 1_default1",
+                "2_default1 2_default1",
+                "2_default1 3_default1",
+                "3_default1 2_default1",
+                "3_default1 3_default1",
+                "3_default1 4_default1",
+                "4_default1 3_default1",
+                "4_default1 4_default1",
+                "4_default1 5_default1",
+                "5_default1 4_default1",
+                "5_default1 5_default1",
+                "5_default1 6_default1",
+                "6_default1 5_default1",
+                "6_default1 6_default1",
+                "6_default1 7_default1",
+                "7_default1 6_default1",
+                "7_default1 7_default1",
+                "7_default1 8_default1",
+                "8_default1 7_default1",
+                "8_default1 8_default1",
+                "8_default1 1_default1",
+                "8_custom2 8_custom2",
+                "8_custom2 1_default1",
+                "1_default1 8_custom2",
+                "8_custom2 8_default1",
+                "8_default1 8_custom2",
+                "8_custom2 2_custom2",
+                "2_custom2 8_custom2",
+                "2_custom2 2_custom2",
+                "2_custom2 1_custom2",
+                "1_custom2 1_custom2",
+                "1_custom2 7_custom2",
+                "7_custom2 1_custom2",
+                "7_custom2 7_custom2",
+                "1_custom2 2_custom2",
+                "2_custom2 8_default1",
+                "2_custom2 1_default1",
+                "8_default1 2_custom2",
+                "1_default1 2_custom2",
+            ]
+        )
+        allowed3 = sorted(
+            [
+                "1_default1 4_default1",
+                "4_default1 1_default1",
+                "1_default1 6_default1",
+                "6_default1 1_default1",
+                "2_default1 5_default1",
+                "5_default1 2_default1",
+                "2_default1 7_default1",
+                "7_default1 2_default1",
+                "3_default1 6_default1",
+                "6_default1 3_default1",
+                "3_default1 8_default1",
+                "8_default1 3_default1",
+                "4_default1 7_default1",
+                "7_default1 4_default1",
+                "5_default1 8_default1",
+                "8_default1 5_default1",
+                "7_custom2 8_custom2",
+                "8_custom2 7_custom2",
+                "7_custom2 1_default1",
+                "1_default1 7_custom2",
+                "7_custom2 8_default1",
+                "8_default1 7_custom2",
+                "1_custom2 2_default1",
+                "2_default1 1_custom2",
+                "1_custom2 7_default1",
+                "7_default1 1_custom2",
+                "2_custom2 6_default1",
+                "6_default1 2_custom2",
+                "2_custom2 3_default1",
+                "3_default1 2_custom2",
+                "8_custom2 6_default1",
+                "6_default1 8_custom2",
+                "8_custom2 3_default1",
+                "3_default1 8_custom2",
+            ]
+        )
         allowed = allowed1 + allowed2 + allowed3
         all_pairs = self.exp_i_antennas.all_pairs
         expected = []
@@ -1385,62 +1615,94 @@ class TestExperimentSetupConfig(unittest.TestCase):
         self.assertEqual(sorted(expected), calculated)
 
     def test_tunnel_antenna_pairs_full(self):
-        expected = sorted([
-            "1_ecohab_1 2_ecohab_1", "2_ecohab_1 1_ecohab_1",
-            "3_ecohab_1 4_ecohab_1", "4_ecohab_1 3_ecohab_1",
-            "5_ecohab_2 6_ecohab_2", "6_ecohab_2 5_ecohab_2",
-            "7_ecohab_2 8_ecohab_2", "8_ecohab_2 7_ecohab_2",
-        ])
+        expected = sorted(
+            [
+                "1_ecohab_1 2_ecohab_1",
+                "2_ecohab_1 1_ecohab_1",
+                "3_ecohab_1 4_ecohab_1",
+                "4_ecohab_1 3_ecohab_1",
+                "5_ecohab_2 6_ecohab_2",
+                "6_ecohab_2 5_ecohab_2",
+                "7_ecohab_2 8_ecohab_2",
+                "8_ecohab_2 7_ecohab_2",
+            ]
+        )
         calculated = self.full_exp.tunnel_pairs()
         self.assertEqual(calculated, expected)
 
     def test_tunnel_antenna_pairs_2(self):
-        expected = sorted([
-            "1_default1 2_default1", "2_default1 1_default1",
-            "3_default1 4_default1", "4_default1 3_default1",
-            "5_default1 6_default1", "6_default1 5_default1",
-            "7_default1 8_default1", "8_default1 7_default1",
-            "1_custom2 2_custom2", "2_custom2 1_custom2",
-
-        ])
+        expected = sorted(
+            [
+                "1_default1 2_default1",
+                "2_default1 1_default1",
+                "3_default1 4_default1",
+                "4_default1 3_default1",
+                "5_default1 6_default1",
+                "6_default1 5_default1",
+                "7_default1 8_default1",
+                "8_default1 7_default1",
+                "1_custom2 2_custom2",
+                "2_custom2 1_custom2",
+            ]
+        )
         calculated = self.exp_i_antennas.tunnel_pairs()
         self.assertEqual(calculated, expected)
 
     def test_cage_antenna_pairs_full(self):
-        expected = sorted([
-            "2_ecohab_1 3_ecohab_1", "3_ecohab_1 2_ecohab_1",
-            "5_ecohab_2 4_ecohab_1", "4_ecohab_1 5_ecohab_2",
-            "7_ecohab_2 6_ecohab_2", "6_ecohab_2 7_ecohab_2",
-            "1_ecohab_1 8_ecohab_2", "8_ecohab_2 1_ecohab_1",
-        ])
+        expected = sorted(
+            [
+                "2_ecohab_1 3_ecohab_1",
+                "3_ecohab_1 2_ecohab_1",
+                "5_ecohab_2 4_ecohab_1",
+                "4_ecohab_1 5_ecohab_2",
+                "7_ecohab_2 6_ecohab_2",
+                "6_ecohab_2 7_ecohab_2",
+                "1_ecohab_1 8_ecohab_2",
+                "8_ecohab_2 1_ecohab_1",
+            ]
+        )
         calculated = self.full_exp.cage_pairs()
         self.assertEqual(calculated, expected)
 
     def test_cage_antenna_pairs_2(self):
-        expected = sorted([
-            "3_default1 2_default1", "2_default1 3_default1",
-            "5_default1 4_default1", "4_default1 5_default1",
-            "7_default1 6_default1", "6_default1 7_default1",
-            "1_default1 8_default1", "8_default1 1_default1",
-            "1_custom2 7_custom2", "7_custom2 1_custom2",
-            "1_default1 2_custom2", "2_custom2 1_default1",
-            "8_default1 2_custom2", "2_custom2 8_default1",
-            "8_custom2 2_custom2", "2_custom2 8_custom2",
-            "8_custom2 1_default1", "1_default1 8_custom2",
-            "8_custom2 8_default1", "8_default1 8_custom2",
-        ])
+        expected = sorted(
+            [
+                "3_default1 2_default1",
+                "2_default1 3_default1",
+                "5_default1 4_default1",
+                "4_default1 5_default1",
+                "7_default1 6_default1",
+                "6_default1 7_default1",
+                "1_default1 8_default1",
+                "8_default1 1_default1",
+                "1_custom2 7_custom2",
+                "7_custom2 1_custom2",
+                "1_default1 2_custom2",
+                "2_custom2 1_default1",
+                "8_default1 2_custom2",
+                "2_custom2 8_default1",
+                "8_custom2 2_custom2",
+                "2_custom2 8_custom2",
+                "8_custom2 1_default1",
+                "1_default1 8_custom2",
+                "8_custom2 8_default1",
+                "8_default1 8_custom2",
+            ]
+        )
         calculated = self.exp_i_antennas.cage_pairs()
         self.assertEqual(calculated, expected)
 
     def test_tunnel_antenna_pair_dict_full(self):
-        expected = {"1_ecohab_1 2_ecohab_1": "ecohab_1 tunnel 1",
-                    "2_ecohab_1 1_ecohab_1": "ecohab_1 tunnel 1",
-                    "3_ecohab_1 4_ecohab_1": "ecohab_1 tunnel 2",
-                    "4_ecohab_1 3_ecohab_1": "ecohab_1 tunnel 2",
-                    "5_ecohab_2 6_ecohab_2": "ecohab_2 tunnel 2",
-                    "6_ecohab_2 5_ecohab_2": "ecohab_2 tunnel 2",
-                    "7_ecohab_2 8_ecohab_2": "ecohab_2 tunnel 1",
-                    "8_ecohab_2 7_ecohab_2": "ecohab_2 tunnel 1"}
+        expected = {
+            "1_ecohab_1 2_ecohab_1": "ecohab_1 tunnel 1",
+            "2_ecohab_1 1_ecohab_1": "ecohab_1 tunnel 1",
+            "3_ecohab_1 4_ecohab_1": "ecohab_1 tunnel 2",
+            "4_ecohab_1 3_ecohab_1": "ecohab_1 tunnel 2",
+            "5_ecohab_2 6_ecohab_2": "ecohab_2 tunnel 2",
+            "6_ecohab_2 5_ecohab_2": "ecohab_2 tunnel 2",
+            "7_ecohab_2 8_ecohab_2": "ecohab_2 tunnel 1",
+            "8_ecohab_2 7_ecohab_2": "ecohab_2 tunnel 1",
+        }
         calculated = self.full_exp.tunnel_pair_dict()
         self.assertEqual(calculated, expected)
 
@@ -1486,20 +1748,20 @@ class TestExperimentSetupConfig(unittest.TestCase):
             "8_default1 1_default1": "shared cage 1",
             "1_custom2 7_custom2": "custom2 cage A",
             "7_custom2 1_custom2": "custom2 cage A",
-            "1_default1 2_custom2":  "shared cage 1",
-            "2_custom2 1_default1":  "shared cage 1",
-            "8_default1 2_custom2":  "shared cage 1",
-            "2_custom2 8_default1":  "shared cage 1",
-            "8_custom2 2_custom2":  "shared cage 1",
-            "2_custom2 8_custom2":  "shared cage 1",
-            "8_custom2 1_default1":  "shared cage 1",
-            "1_default1 8_custom2":  "shared cage 1",
-            "8_custom2 8_default1":  "shared cage 1",
-            "8_default1 8_custom2":  "shared cage 1",
+            "1_default1 2_custom2": "shared cage 1",
+            "2_custom2 1_default1": "shared cage 1",
+            "8_default1 2_custom2": "shared cage 1",
+            "2_custom2 8_default1": "shared cage 1",
+            "8_custom2 2_custom2": "shared cage 1",
+            "2_custom2 8_custom2": "shared cage 1",
+            "8_custom2 1_default1": "shared cage 1",
+            "1_default1 8_custom2": "shared cage 1",
+            "8_custom2 8_default1": "shared cage 1",
+            "8_default1 8_custom2": "shared cage 1",
         }
         calculated = self.exp_i_antennas.cage_pair_dict()
         self.assertEqual(calculated, expected)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
