@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 import unittest
+
 import numpy as np
 
+from pyEcoHAB import Loader, Timeline, data_path
 from pyEcoHAB import incohort_sociability as ics
+from pyEcoHAB import sample_data
 from pyEcoHAB import utility_functions as utils
-from pyEcoHAB import data_path, sample_data
-from pyEcoHAB import Loader
-from pyEcoHAB import Timeline
-
 
 try:
     basestring

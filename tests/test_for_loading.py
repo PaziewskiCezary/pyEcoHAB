@@ -1,16 +1,18 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # encoding: utf-8
-from __future__ import print_function, division, absolute_import
-import os
+from __future__ import absolute_import, division, print_function
+
 import glob
+import os
 import unittest
+
 import numpy as np
-import pyEcoHAB.utils.for_loading as uf
+
 import pyEcoHAB.utility_functions as ut
+import pyEcoHAB.utils.for_loading as uf
 from pyEcoHAB import data_path
 from pyEcoHAB.SetupConfig import SetupConfig
-
 
 SAME_PIPE = {
     "1": ["1", "2"],

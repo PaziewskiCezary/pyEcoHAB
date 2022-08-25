@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 import unittest
 
-import pyEcoHAB.utils.for_loading as uf
 import pyEcoHAB.utility_functions as utils
-from pyEcoHAB import data_path
+import pyEcoHAB.utils.for_loading as uf
+from pyEcoHAB import Timeline, data_path
 from pyEcoHAB.Loader import EcoHabDataBase, Loader
-from pyEcoHAB import Timeline
 from pyEcoHAB.SetupConfig import SetupConfig
 
 

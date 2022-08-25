@@ -1,18 +1,18 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 import unittest
 from datetime import date
+
 import numpy as np
-import pyEcoHAB.utils.for_loading as uf
+
 import pyEcoHAB.utility_functions as utils
-from pyEcoHAB import data_path, sample_data
+import pyEcoHAB.utils.for_loading as uf
+from pyEcoHAB import (Loader, Merger, Timeline, data_path, get_activity,
+                      get_dynamic_interactions, get_incohort_sociability,
+                      get_solitude, sample_data)
 from pyEcoHAB.SetupConfig import SetupConfig
-from pyEcoHAB import Loader, Merger, Timeline
-from pyEcoHAB import get_incohort_sociability
-from pyEcoHAB import get_solitude
-from pyEcoHAB import get_activity
-from pyEcoHAB import get_dynamic_interactions
 
 
 class TestLoader(unittest.TestCase):

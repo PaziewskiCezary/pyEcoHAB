@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 import unittest
-from pyEcoHAB import SetupConfig, ExperimentSetupConfig
-from pyEcoHAB import data_path
+
+from pyEcoHAB import ExperimentSetupConfig, SetupConfig, data_path
 
 # In the first scripts for EcoHAB data analysis,
 # the antennas were numbered from 1 to 8. The cages

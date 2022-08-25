@@ -1,10 +1,13 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import unittest
+
 import numpy as np
-from pyEcoHAB import dominance_in_2_cages as dom
+
 from pyEcoHAB import SetupConfig, data_path
+from pyEcoHAB import dominance_in_2_cages as dom
 
 
 class TestGetStates(unittest.TestCase):

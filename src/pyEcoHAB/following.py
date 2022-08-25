@@ -10,21 +10,14 @@ import numpy as np
 
 from . import get_activity
 from . import utility_functions as utils
-from .plotting_functions import (
-    make_histograms_for_every_mouse,
-    make_RasterPlot,
-    pooled_hists,
-    pooled_hists_for_every_mouse,
-    single_histogram_figures,
-    single_in_cohort_soc_plot,
-)
-from .write_to_file import (
-    write_binned_data,
-    write_bootstrap_results,
-    write_csv_rasters,
-    write_interpair_intervals,
-    write_sum_data,
-)
+from .plotting_functions import (make_histograms_for_every_mouse,
+                                 make_RasterPlot, pooled_hists,
+                                 pooled_hists_for_every_mouse,
+                                 single_histogram_figures,
+                                 single_in_cohort_soc_plot)
+from .write_to_file import (write_binned_data, write_bootstrap_results,
+                            write_csv_rasters, write_interpair_intervals,
+                            write_sum_data)
 
 
 def insert_interval(candidate_t_start, interval, t_starts, t_ends, duration):

@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import unittest
+
+from pyEcoHAB import Loader, SetupConfig, Timeline, data_path, sample_data
 from pyEcoHAB import tube_dominance as tubed
-from pyEcoHAB import SetupConfig, Loader, Timeline
-from pyEcoHAB import data_path, sample_data
 
 
 class TestCheckTwoMice(unittest.TestCase):

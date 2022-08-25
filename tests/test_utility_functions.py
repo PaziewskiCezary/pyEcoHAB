@@ -1,20 +1,17 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # encoding: utf-8
+import calendar
 import os
-import unittest
 import random
 import time
-import calendar
+import unittest
 from collections import OrderedDict
+
 import numpy as np
 
 import pyEcoHAB.utility_functions as uf
-from pyEcoHAB import data_path
-from pyEcoHAB import Loader
-from pyEcoHAB import Timeline
-from pyEcoHAB import SetupConfig
-
+from pyEcoHAB import Loader, SetupConfig, Timeline, data_path
 
 SAME_PIPE = {
     "1": ["1", "2"],

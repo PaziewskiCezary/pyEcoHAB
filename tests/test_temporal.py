@@ -1,11 +1,11 @@
-import unittest
 import os
-from datetime import datetime, tzinfo, date, time
+import unittest
 from configparser import ConfigParser
+from datetime import date, datetime, time, tzinfo
 
 import pyEcoHAB.utils.temporal as ut
-from pyEcoHAB.utils import for_loading as fl
 from pyEcoHAB import sample_data
+from pyEcoHAB.utils import for_loading as fl
 
 
 class TestConvertIntsToTime(unittest.TestCase):
