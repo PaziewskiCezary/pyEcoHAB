@@ -10,14 +10,21 @@ import numpy as np
 
 from . import get_activity
 from . import utility_functions as utils
-from .plotting_functions import (make_histograms_for_every_mouse,
-                                 make_RasterPlot, pooled_hists,
-                                 pooled_hists_for_every_mouse,
-                                 single_histogram_figures,
-                                 single_in_cohort_soc_plot)
-from .write_to_file import (write_binned_data, write_bootstrap_results,
-                            write_csv_rasters, write_interpair_intervals,
-                            write_sum_data)
+from .plotting_functions import (
+    make_histograms_for_every_mouse,
+    make_RasterPlot,
+    pooled_hists,
+    pooled_hists_for_every_mouse,
+    single_histogram_figures,
+    single_in_cohort_soc_plot,
+)
+from .write_to_file import (
+    write_binned_data,
+    write_bootstrap_results,
+    write_csv_rasters,
+    write_interpair_intervals,
+    write_sum_data,
+)
 
 
 def insert_interval(candidate_t_start, interval, t_starts, t_ends, duration):
@@ -235,7 +242,6 @@ def following_single_pair(directions_m1, directions_m2, keys):
     followings = 0
     intervals = []
     time_together = 0
-
     for key in keys:
         out = following_single_direction(directions_m1[key], directions_m2[key])
         f_single_dir, time_single_dir, ints_single_dir = out
@@ -260,7 +266,7 @@ def following_matrices(directions_dict, mice, t_start, t_stop, keys):
                 directions_dict[mouse1], directions_dict[mouse2], keys
             )
             followings[mouse1][mouse2], time_in_pipe, mouse_intervals = out
-            time_together[mouse1][mouse2] = time_in_pipe / durations
+            time_together[mouse1][mouse2] = time_in_pipe
             key = "%s|%s" % (mouse1, mouse2)
             interval_details[key] += mouse_intervals
     return followings, time_together, interval_details
@@ -454,7 +460,7 @@ def get_dynamic_interactions(
     mouse_following_sum = OrderedDict()
     mouse_leading_sum_excess = OrderedDict()
     mouse_following_sum_excess = OrderedDict()
-    mouse_activity = OrderedDict()
+    mouse_activity = OrderedDict()  # TODO this is not used
     mouse_leading_sum_div_activ = OrderedDict()
     mouse_following_sum_div_activ = OrderedDict()
     mouse_leading_sum_div_activ_excess = OrderedDict()
@@ -470,8 +476,12 @@ def get_dynamic_interactions(
             out = following_matrices(
                 directions_dict, mice, t_start, t_stop, ecohab_data.directions
             )
-            following[ph][lab], time_together[ph][lab], phase_intervals1 = out
-            duration = t_stop - t_start
+            (
+                following[ph][lab],
+                time_together[ph][lab],
+                phase_intervals1,
+            ) = out  # time_together is not time, but normed by duration
+            duration = t_stop - t_start  # TOD0 why is this here
             out_expected = resample_single_phase(
                 directions_dict,
                 mice,
