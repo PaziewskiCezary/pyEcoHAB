@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division
 
+import concurrent.futures
+import multiprocessing
 import os
 import random
 from collections import OrderedDict
@@ -21,7 +23,6 @@ from .write_to_file import (write_binned_data, write_bootstrap_results,
 
 
 def insert_interval(candidate_t_start, interval, t_starts, t_ends, duration):
-
     if candidate_t_start in t_starts:
         return 0
 
@@ -287,6 +288,61 @@ def add_intervals(all_intervals, phase_intervals):
         all_intervals[mouse].extend(phase_intervals[mouse])
 
 
+def get_dynamic_interactions_parallel(
+    ecohab_data,
+    timeline,
+    N,
+    bins,
+    res_dir="",
+    prefix="",
+    remove_mouse=None,
+    save_distributions=True,
+    save_figures=False,
+    return_median=False,
+    delimiter=";",
+    save_times_following=False,
+    seeds=None,
+    full_dir_tree=True,
+    max_workers=None,
+):
+    if not isinstance(bins, (tuple, list, set)):
+        raise ValueError("can't run this `get_dynamic_interactions_parallel`, "\
+                        "bins must be one of [tuple, list, set] type")
+    max_workers = max_workers if max_workers else multiprocessing.cpu_count()
+
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as pool:
+        ii32 = np.iinfo(np.int32)
+        seeds = seeds if seeds and len(seeds) == len(bins) else np.random.randint(ii32.min, ii32.max, size=len(bins))
+        works = {pool.submit(get_dynamic_interactions,
+                             ecohab_data,
+                             timeline,
+                             N,
+                             binsize,
+                             res_dir,
+                             prefix,
+                             remove_mouse,
+                             save_distributions,
+                             save_figures,
+                             return_median,
+                             delimiter,
+                             save_times_following,
+                             seed,
+                             full_dir_tree,
+                             ) : binsize
+                 for binsize, seed in zip(reversed(bins), seeds)}
+
+        results = {}
+        for future in concurrent.futures.as_completed(works):
+            binsize = works[future]
+            try:
+                results[binsize] = future.result()
+            except Exception as exc:
+                print('%s generated an exception: %s' % (binsize, exc))
+            else:
+                print('bin %s is has finished' % binsize)
+
+        return results
+
 def get_dynamic_interactions(
     ecohab_data,
     timeline,
@@ -302,7 +358,7 @@ def get_dynamic_interactions(
     save_times_following=False,
     seed=None,
     full_dir_tree=True,
-):
+):  # TODO save_distributions not used
     if res_dir == "":
         res_dir = ecohab_data.res_dir
     if prefix == "":
@@ -320,7 +376,7 @@ def get_dynamic_interactions(
     time_together = utils.make_all_results_dict(*data_keys)
     time_together_exp = utils.make_all_results_dict(*data_keys)
 
-    if isinstance(binsize, int) or isinstance(binsize, float):
+    if isinstance(binsize, (int, float)):
         binsize_name = "%3.2f_h" % (binsize / 3600)
         if int(binsize) == 24 * 3600:
             csv_results_following = np.zeros((len(phases), len(mice), len(mice)))

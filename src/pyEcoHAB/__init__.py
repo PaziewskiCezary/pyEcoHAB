@@ -6,7 +6,7 @@ data_path = os.path.join(ecohab_loc, "data")
 sample_data = os.path.join(data_path, "BALB_VPA_data_cohort_1")
 
 from .cage_visits import get_activity
-from .following import get_dynamic_interactions, resample_single_phase
+from .following import get_dynamic_interactions, get_dynamic_interactions_parallel, resample_single_phase
 from .incohort_sociability import get_incohort_sociability, get_solitude
 from .Loader import Loader, Merger
 from .SetupConfig import ExperimentSetupConfig, IdentityConfig, SetupConfig
