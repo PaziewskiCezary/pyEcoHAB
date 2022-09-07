@@ -15,3 +15,6 @@ from .Timeline import Timeline
 from .trajectories import (get_antenna_transition_durations,
                            get_light_dark_transitions, get_registration_trains)
 from .tube_dominance import get_tube_dominance
+
+import logging
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)

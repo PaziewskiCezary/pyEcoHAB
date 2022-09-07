@@ -1,9 +1,8 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 from __future__ import absolute_import, division, print_function
 
+import logging
 import os
-
-import numpy as np
 
 from . import utility_functions as utils
 
@@ -58,7 +57,7 @@ def save_data_cvs(
     if not os.path.exists(new_path):
         os.makedirs(new_path)
     fname = os.path.join(new_path, fname)
-    print(fname)
+    logging.info('Creating %s', fname)
     f = open(fname, "w")
     head = make_header_for_activity(phases, delimiter)
     for stim in which:
@@ -91,7 +90,7 @@ def write_binned_data(
     )
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-    print(fname)
+    logging.info('Creating %s', fname)
     f = open(fname, "w")
     header = make_header_for_activity(mice, delimiter)
 
@@ -131,7 +130,7 @@ def save_single_histograms(
     fname = os.path.join(
         directory, "%s_%s_%s_%s.csv" % (fname, prefix, phase, additional_info)
     )
-    print(fname)
+    logging.info('Creating %s', fname)
     try:
         f = open(fname, "w")
     except IOError:
@@ -169,7 +168,7 @@ def write_csv_rasters(
         fname = "%s_%s" % (prefix, fname)
     fname = os.path.join(directory, fname)
 
-    print(fname)
+    logging.info('Creating %s', fname)
     try:
         f = open(fname, "w")
     except IOError:
@@ -199,7 +198,7 @@ def write_csv_tables(
     new_name = os.path.join(dirname, "data")
     directory = utils.check_directory(main_directory, new_name)
     fname = os.path.join(directory, "%s_%s.csv" % (fname, prefix))
-    print(fname)
+    logging.info('Creating %s', fname)
     try:
         f = open(fname, "w")
     except IOError:
@@ -299,7 +298,7 @@ def write_interpair_intervals(
     except IOError:
         print("Could not write to file", fname)
         return None
-    print(fname)
+    logging.info('Creating %s', fname)
     f.write("followed mouse %s following mouse %s intervals\n" % (delimiter, delimiter))
     keys = sorted(results.keys())
     for key in keys:
@@ -328,7 +327,7 @@ def save_visit_duration(
         new_name = os.path.join(
             new_dir, "%s_%s_%s_%s_%s.csv" % (fname, mouse, phase, prefix, add_info)
         )
-        print(new_name)
+        logging.info('Creating %s', new_name)
         f = open(new_name, "w")
         for address in results.keys():
             f.write("Visit durations to %s " % address)
@@ -456,7 +455,7 @@ def write_sum_data(
     fname = os.path.join(new_path, "%s_%s_%s.csv" % (fname, prefix, additional_info))
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-    print(fname)
+    logging.info('Creating %s', fname)
     f = open(fname, "w")
     header = "mouse"
 
@@ -508,7 +507,7 @@ def write_two_values(
     fname = os.path.join(new_path, "%s_%s_%s.csv" % (fname, prefix, additional_info))
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-    print(fname)
+    logging.info('Creating %s', fname)
     f = open(fname, "w")
     header = "mouse"
 

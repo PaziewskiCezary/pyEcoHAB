@@ -7,13 +7,14 @@ Created on Fri Mar 24 13:38:58 2017
 """
 from __future__ import absolute_import, division, print_function
 
+import logging
 import os
 
 import matplotlib as mpl
 import numpy as np
 
 if os.environ.get("DISPLAY", "") == "":
-    print("no display found. Using non-interactive Agg backend")
+    logging.info("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -95,7 +96,7 @@ def make_RasterPlot(
     if prefix:
         name = "%s_%s" % (prefix, name)
     new_name = os.path.join(new_path, name)
-    print(new_name)
+    logging.info('Creating %s', new_name)
     plt.savefig(
         new_name + ".png", transparent=False, bbox_inches=None, pad_inches=0.5, dpi=100
     )
@@ -202,7 +203,7 @@ def single_timeline_heat_map(
         subdirectory = os.path.join(subdirectory, "figs")
     dir_name = utils.check_directory(directory, subdirectory)
     new_name = os.path.join(dir_name, name)
-    print(new_name)
+    logging.info('Creating %s', new_name)
     fig.subplots_adjust(left=0.25)
     fig.subplots_adjust(bottom=0.25)
     fig.savefig(
@@ -240,7 +241,7 @@ def single_in_cohort_soc_plot(
         new_name = directory
     directory = utils.check_directory(main_directory, new_name)
     fname = os.path.join(directory, "%s_%s_%s" % (fname, prefix, phase))
-    print(fname)
+    logging.info('Creating %s', fname)
     label_mice = make_labels(mice)
     fig = plt.figure(figsize=(10, 6))
     ax = []
@@ -315,7 +316,7 @@ def single_in_cohort_soc_plot(
     fig.subplots_adjust(hspace=0.3)
     fig.savefig(fname + ".png", dpi=100, bbox_inches=None, pad_inches=2)
     plt.close(fig)
-    print(fname + ".png")
+    logging.info('Creating %s',fname + ".png")
 
 
 def pooled_hists(
@@ -456,7 +457,7 @@ def make_histograms_for_every_mouse(
         new_name = "%s_%s" % (fname, new_name)
 
     fname = os.path.join(dir_name, new_name)
-    print(fname)
+    logging.info('Creating %s', fname)
     fig.subplots_adjust(wspace=0.15)
     fig.savefig(fname + ".png", bbox_inches=None, pad_inches=0.5, dpi=100)
     plt.close(fig)
@@ -535,7 +536,7 @@ def single_histogram_figures(
         median_mean=median_mean,
     )
     fig.savefig(new_fname + ".png", bbox_inches=None, pad_inches=0.5, dpi=100)
-    print(new_fname)
+    logging.info('Creating %s',new_fname)
     plt.close(fig)
 
 
@@ -636,7 +637,7 @@ def make_fig_histogram(results, path, title):
             continue
     fig.subplots_adjust(wspace=0.15)
     fig.savefig(path + ".png", dpi=100, bbox_inches=None, pad_inches=0.5)
-    print(path)
+    logging.info('Creating %s',path)
     plt.close(fig)
 
 
@@ -737,7 +738,7 @@ def make_visit_duration_histogram(
         fig.suptitle("%s visit durations in %s" % (mouse, phase), fontsize=fontsize + 2)
         fig.subplots_adjust(wspace=0.15)
         fig.savefig(new_name + ".png", dpi=100, bbox_inches=None, pad_inches=0.5)
-        print(new_name)
+        logging.info('Creating %s', new_name)
         plt.close(fig)
 
 
