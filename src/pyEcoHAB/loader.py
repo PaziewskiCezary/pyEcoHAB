@@ -9,11 +9,6 @@ import sys
 from collections import OrderedDict
 from datetime import date
 
-try:
-    basestring
-except NameError:
-    basestring = str
-
 import numpy as np
 
 from pyEcoHAB.setup_config import ExperimentSetupConfig, SetupConfig

@@ -14,11 +14,6 @@ from pyEcoHAB.utility_functions import check_directory
 
 h = "antenna, incorrect transitions count, percentage of antenna recordings\n"
 
-try:
-    basestring
-except NameError:
-    basestring = str
-
 PAIRS = [
     "1 3",
     "1 4",
@@ -247,7 +242,7 @@ def remove_ghost_tags(raw_data, legal_tags="ALL"):
         return raw_data
 
     new_data = []
-    if isinstance(legal_tags, basestring):
+    if isinstance(legal_tags, str):
         legal_tags = [legal_tags]
 
     for d in raw_data:
