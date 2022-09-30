@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import numpy as np
 
@@ -42,12 +42,10 @@ def get_states_mouse(antennas, times, t_start, t_end, config, dt):
         next_t = times[i + 1]
         timestamp = utils.get_timestamp(t_start, t_now, dt)
         next_timestamp = utils.get_timestamp(t_start, next_t, dt)
-        print(a_now, next_a)
         if next_a in stimCage_internal_antennas:
             states[timestamp:next_timestamp] = 3
         elif a_now != next_a:
             if config.same_tunnel[a_now] == config.same_tunnel[next_a]:
-                print(timestamp, next_timestamp, "tunnel")
                 # easy, the mouse is crossing the pipe
                 states[timestamp:next_timestamp] = 1
         else:

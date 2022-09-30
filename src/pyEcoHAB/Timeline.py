@@ -8,6 +8,7 @@ Created by Szymon Łęski on 2013-02-19.
 """
 import calendar
 import glob
+import logging
 import os
 import sys
 import time
@@ -17,7 +18,7 @@ import matplotlib as mpl
 import numpy as np
 
 if os.environ.get("DISPLAY", "") == "":
-    print("no display found. Using non-interactive Agg backend")
+    logging.info("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
 import matplotlib.dates as mpd
 import matplotlib.pyplot as plt

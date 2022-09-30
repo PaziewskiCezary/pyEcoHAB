@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division
 
 import concurrent.futures
+import logging
 import multiprocessing
 import os
 import random
@@ -337,9 +338,9 @@ def get_dynamic_interactions_parallel(
             try:
                 results[binsize] = future.result()
             except Exception as exc:
-                print('%s generated an exception: %s' % (binsize, exc))
+                logging.warning('%s generated an exception: %s' % (binsize, exc))
             else:
-                print('bin %s is has finished' % binsize)
+                logging.info('bin %s is has finished' % binsize)
 
         return results
 

@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import calendar
+import logging
 import os
 import sys
 import time
@@ -106,7 +107,7 @@ def parse_fname(fname):
         if len(parts) == 3:
             date, hour = parts[:2]
         else:
-            print("Unnkown filename format %s.")
+            logging.exception("Unnkown filename format %s.")
             raise
     hour = hour.split(".")[0]
     date_in_sec = calendar.timegm(time.strptime(date, "%Y%m%d"))

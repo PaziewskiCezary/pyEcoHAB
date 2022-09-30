@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import glob
+import logging
 import os
 import sys
 
@@ -90,11 +91,11 @@ class SetupConfigMethods(RawConfigParser):
                 elif antenna_type.startswith("internal"):
                     cage_dict[sec].append(val)
                 else:
-                    print("Unknown antenna type %s" % antenna_type)
+                    logging.warning("Unknown antenna type %s" % antenna_type)
             if not len(cage_dict[sec]):
-                print("Did not register any antennas associated with %s", sec)
+                logging.warning("Did not register any antennas associated with %s", sec)
         if not len(list(cage_dict.keys())):
-            print("Did not register any cages in this setup")
+            logging.error("Did not register any cages in this setup")
         return cage_dict
 
     def get_tunnels_dict(self):
@@ -109,11 +110,11 @@ class SetupConfigMethods(RawConfigParser):
                 if antenna_type.startswith("entrance"):
                     tunnel_dict[sec].append(val)
                 else:
-                    print("Unknown antenna type %s" % antenna_type)
+                    logging.warning("Unknown antenna type %s" % antenna_type)
             if not len(tunnel_dict[sec]):
-                print("Did not register any antennas associated with %s", sec)
+                logging.warning("Did not register any antennas associated with %s", sec)
         if not len(list(tunnel_dict.keys())):
-            print("Did not register any tunnels in this setup")
+            logging.error("Did not register any tunnels in this setup")
         return tunnel_dict
 
     @property
@@ -578,7 +579,7 @@ class SetupConfig(SetupConfigMethods):
                         self.fname = os.path.basename(fnames[0])
                         self.path = path
                     else:
-                        print("No setup config found in %s" % path)
+                        logging.warning("No setup config found in %s" % path)
                         self.path = data_path
                         self.fname = standard
 
@@ -589,7 +590,7 @@ class SetupConfig(SetupConfigMethods):
         full_path = self.find_path(
             path, fname, "standard_setup.txt", "setup.txt", "setup*.txt"
         )
-        print(full_path)
+        logging.info("Using %s", full_path)
         self.read(full_path)
         self.make_definitions()
 

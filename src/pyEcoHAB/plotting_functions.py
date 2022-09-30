@@ -5,7 +5,7 @@ Created on Fri Mar 24 13:38:58 2017
 
 @author: Jan Maka, Joanna Jędrzejewska-Szmek
 """
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import logging
 import os

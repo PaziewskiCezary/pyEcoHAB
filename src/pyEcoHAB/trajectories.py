@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import os
 from collections import OrderedDict

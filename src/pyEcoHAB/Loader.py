@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
+import logging
 import os
 import sys
 from collections import OrderedDict
@@ -167,7 +168,7 @@ class EcoHabDataBase(object):
             if mice in self.mice:
                 mice = [mice]
             else:
-                print("Could not find animal %s" % mice)
+                logging.warning("Could not find animal %s" % mice)
                 return []
         if mice is None:
             mice = self.get_mice()

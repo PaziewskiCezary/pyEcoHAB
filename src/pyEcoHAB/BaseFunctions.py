@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import sys
 
@@ -65,7 +65,7 @@ class DataBase(object):
 
     def getproperty(self, mice, propname, astype=None):
         if sys.version_info < (3, 0):
-            if isinstance(mice, (str, unicode)):
+            if isinstance(mice, str):
                 mice = [mice]
         else:
             if isinstance(mice, str):

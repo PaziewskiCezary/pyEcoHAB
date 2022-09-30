@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import logging
 import os
@@ -57,6 +57,7 @@ def save_data_cvs(
     if not os.path.exists(new_path):
         os.makedirs(new_path)
     fname = os.path.join(new_path, fname)
+
     logging.info('Creating %s', fname)
     f = open(fname, "w")
     head = make_header_for_activity(phases, delimiter)
@@ -134,7 +135,7 @@ def save_single_histograms(
     try:
         f = open(fname, "w")
     except IOError:
-        print("Could not write to file", fname)
+        logging.error("Could not write to file", fname)
         return None
     for i, mouse in enumerate(mice):
         f.write(delimiter + mouse)
@@ -172,7 +173,7 @@ def write_csv_rasters(
     try:
         f = open(fname, "w")
     except IOError:
-        print("Could not write to file", fname)
+        logging.error("Could not write to file", fname)
     header = "mouse pair"
     for phase in phases:
         header += delimiter + str(phase) + " h"
@@ -202,7 +203,7 @@ def write_csv_tables(
     try:
         f = open(fname, "w")
     except IOError:
-        print("Could not write to ", fname)
+        logging.error("Could not write to ", fname)
         return
 
     phase_pairs = [
@@ -260,7 +261,7 @@ def write_csv_alone(
     try:
         f = open(fname, "w")
     except IOError:
-        print("Could not write to ", fname)
+        logging.error("Could not write to ", fname)
         return
     phases_header = "Mouse"
     for phase in phases:
@@ -296,7 +297,7 @@ def write_interpair_intervals(
     try:
         f = open(fname, "w")
     except IOError:
-        print("Could not write to file", fname)
+        logging.error("Could not write to file", fname)
         return None
     logging.info('Creating %s', fname)
     f.write("followed mouse %s following mouse %s intervals\n" % (delimiter, delimiter))
@@ -424,7 +425,7 @@ def save_antenna_transitions(
         for label in transition_times[phase].keys():
             new_fname = "%s_%s_%s.csv" % (fname, new_phase, label)
             new_path = os.path.join(out_dir, new_fname)
-            print(new_path)
+            logging.info(new_path)
             f = open(new_path, "w")
             for key in transition_times[phase][label].keys():
                 f.write("%s%s" % (key, delimiter))
