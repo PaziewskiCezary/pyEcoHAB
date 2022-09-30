@@ -16,9 +16,9 @@ except NameError:
 
 import numpy as np
 
-from pyEcoHAB.SetupConfig import ExperimentSetupConfig, SetupConfig
+from pyEcoHAB.setup_config import ExperimentSetupConfig, SetupConfig
 
-from . import BaseFunctions
+from . import base_functions
 from . import utility_functions as utils
 from .utils import for_loading as ufl
 
@@ -46,7 +46,7 @@ class EcoHabDataBase(object):
            setup_config: SetupConfig or ExperimentSetupConfig
              Geometry of the Eco-Hab setup used to collect data.
         """
-        self.registrations = BaseFunctions.Data(data, mask)
+        self.registrations = base_functions.Data(data, mask)
         self.threshold = visit_threshold
         self.mice = self.get_mice()
         self.visits = self._calculate_visits(setup_config)
@@ -100,7 +100,7 @@ class EcoHabDataBase(object):
         """
         temp_data = self._calculate_animal_positions(setup_config)
         data = ufl.transform_visits(temp_data)
-        return BaseFunctions.Visits(data, None)
+        return base_functions.Visits(data, None)
 
     def mask_data(self, start_time, end_time):
         """

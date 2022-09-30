@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 # -*- encoding: utf-8 -*-
 """
-Timeline.py
+timeline.py
 
 Created by Szymon Łęski on 2013-02-19.
 
