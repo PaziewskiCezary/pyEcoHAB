@@ -795,7 +795,7 @@ def get_dynamic_interactions(
             excess_time = utils.calc_excess(time_together[ph], time_together[ph])
             write_binned_data(
                 excess_time,
-                "%s_expected_%s" % (fname_times, method),
+                "%s_excess_%s" % (fname_times, method),
                 mice,
                 bin_labels[ph],
                 new_phase,
