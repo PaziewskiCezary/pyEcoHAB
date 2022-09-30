@@ -361,7 +361,7 @@ def get_incohort_sociability(
             reflected_excess_time, mean_excess_time_per_mouse[ph], len(mice) - 1
         )
 
-        if isinstance(binsize, int) or isinstance(binsize, float):
+        if isinstance(binsize, (int, float)):
             if int(binsize) == 24 * 3600:
                 fname = "incohort_sociability_"
                 res = utils.dict_to_array_2D(full_results[ph][0], mice, mice)

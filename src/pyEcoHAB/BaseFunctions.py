@@ -37,7 +37,7 @@ class DataBase(object):
         All future queries will be clipped to the visits starting between
         starttime and endtime."""
         arr = np.array(self.data[column_name])
-        if isinstance(args, int) or isinstance(args, float):
+        if isinstance(args, (int, float)):
             start = min(arr)
             end = args[0]
         elif len(args) >= 2:

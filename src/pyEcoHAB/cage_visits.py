@@ -154,7 +154,7 @@ def get_activity(
 
     mice = utils.get_mice(ecohab_data.mice, remove_mouse)
     add_info_mice = utils.add_info_mice_filename(remove_mouse)
-    if isinstance(binsize, int) or isinstance(binsize, float):
+    if isinstance(binsize, (int, float)):
         binlen = binsize
         fname = "%sactivity_bin_%3.2f_h.csv" % (prefix, binsize / 3600)
         histogram_fname = "activity_histograms_bin_%3.1f_h" % (binsize / 3600)

@@ -623,7 +623,7 @@ def get_dynamic_interactions(
             full_dir_tree=full_dir_tree,
         )
 
-        if isinstance(binsize, int) or isinstance(binsize, float):
+        if isinstance(binsize, (int, float)):
             if int(binsize) == 24 * 3600:
                 if full_dir_tree:
                     fname = "dynamic_interactions_N_%d_%s" % (N, method)
@@ -807,7 +807,7 @@ def get_dynamic_interactions(
                 delimiter=delimiter,
                 full_dir_tree=full_dir_tree,
             )
-            if isinstance(binsize, int) or isinstance(binsize, float):
+            if isinstance(binsize, (int, float)):
                 if int(binsize) == 24 * 3600:
                     fname = "%s_N_%d_%s" % (fname_times, N, method)
                     res = utils.dict_to_array_2D(time_together[ph][0], mice, mice)

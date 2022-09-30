@@ -538,7 +538,7 @@ def prepare_binned_data(ecohab_data, timeline, bins, mice):
             data[phase] = {}
             data[phase][0] = prepare_data(ecohab_data, mice, time)
         keys = [all_phases, bin_labels]
-    elif isinstance(bins, int) or isinstance(bins, float):
+    elif isinstance(bins, (int, float)):
         phases = []
         all_phases = filter_dark_light(timeline.sections())
         shortest_phase = get_shortest_phase_duration(timeline)
@@ -650,7 +650,7 @@ def get_registrations_bins(
             data[phase] = {}
             data[phase][0] = function(ecohab_data, mice, *time)
         data_keys = [all_phases, bin_labels]
-    elif isinstance(bins, int) or isinstance(bins, float):
+    elif isinstance(bins, (int, float)):
         phases = []
         all_phases = filter_dark_light(timeline.sections())
         min_phase = int(get_shortest_phase_duration(timeline))
